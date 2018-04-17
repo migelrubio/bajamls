@@ -1,0 +1,28 @@
+{layout='layouts/_main-layout'}
+
+{layout:set name="styles"}
+    <style>
+        #home-carousel {
+            top:-64px;
+        }
+    </style>
+{/layout:set}
+
+<div id="home-carousel" class="carousel carousel-slider">
+    <a class="carousel-item" href="#one!"><img src="https://loremflickr.com/1600/920/mexico?random=1"></a>
+    <a class="carousel-item" href="#two!"><img src="https://loremflickr.com/1600/920/mexico?random=2"></a>
+    <a class="carousel-item" href="#three!"><img src="https://loremflickr.com/1600/920/mexico?random=3"></a>
+    <a class="carousel-item" href="#four!"><img src="https://loremflickr.com/1600/920/mexico?random=4"></a>
+    <a class="carousel-item" href="#four!"><img src="https://loremflickr.com/1600/920/mexico?random=5"></a>
+</div>
+
+{layout:set name="scripts"}
+    <script>
+        $('.carousel.carousel-slider').carousel({fullWidth: true});
+        autoplay();
+        function autoplay() {
+            $('.carousel').carousel('next');
+            setTimeout(autoplay, 5000);
+        }
+    </script>
+{/layout:set}

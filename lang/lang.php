@@ -1,0 +1,65 @@
+<?php
+//*** English ***
+    $lang['en']['mls_number'] = 'MLS number';
+    $lang['en']['city'] = 'City';
+    $lang['en']['property_type'] = 'Property type';
+    $lang['en']['price'] = 'Price';
+    $lang['en']['any'] = 'Any';
+    $lang['en']['submit'] = 'Submit';
+    $lang['en']['cabo_corridor'] = 'Cabo Corridor';
+    $lang['en']['san_jose_corridor'] = 'San Jose Corridor';
+    $lang['en']['east_cape'] = 'East Cape';
+    $lang['en']['pacific_side'] = 'Pacific Side';
+    $lang['en']['condos'] = 'Condos';
+    $lang['en']['houses'] = 'Houses';
+    $lang['en']['townhouses'] = 'Townhouses';
+    $lang['en']['land'] = 'Land';
+    $lang['en']['commercial'] = 'Commercial';
+    $lang['en']['business'] = 'Business';
+    $lang['en']['fractional'] = 'Fractional';
+    $lang['en']['multifamily'] = 'MultiFamily';
+    $lang['en']['under'] = 'Under';
+    $lang['en']['over'] = 'Over';
+    $lang['en']['results'] = 'Results';
+    $lang['en']['email_the_agent'] = 'Email The Agent';
+    $lang['en']['login'] = 'Login';
+    $lang['en']['property_consultation'] = 'Property Consultation';
+    $lang['en']['details'] = 'Details';
+    $lang['en']['photos'] = 'Photos';
+    $lang['en']['map'] = 'Map';
+    $lang['en']['yes'] = 'Yes';
+    $lang['en']['no'] = 'No';
+    $lang['en']['developments'] = 'Developments';
+    //*** Spanish ***
+    $lang['es']['mls_number'] = 'N&uacute;mero MLS';
+    $lang['es']['city'] = 'Ciudad';
+    $lang['es']['property_type'] = 'Tipo de propiedad';
+    $lang['es']['price'] = 'Precio';
+    $lang['es']['any'] = 'Cualquiera';
+    $lang['es']['submit'] = 'Enviar';
+    $lang['es']['cabo_corridor'] = 'Corredor - San Lucas';
+    $lang['es']['san_jose_corridor'] = 'Corredor - San Jose';
+    $lang['es']['east_cape'] = 'Cabo del Este';
+    $lang['es']['pacific_side'] = 'Pac&iacute;fico';
+    $lang['es']['condos'] = 'Condominios';
+    $lang['es']['houses'] = 'Casas';
+    $lang['es']['townhouses'] = 'Residencias';
+    $lang['es']['land'] = 'Terrenos';
+    $lang['es']['commercial'] = 'Comercial';
+    $lang['es']['business'] = 'Negocio';
+    $lang['es']['fractional'] = 'Fraccionamiento';
+    $lang['es']['multifamily'] = 'Multi-Familiar';
+    $lang['es']['under'] = 'Menos de';
+    $lang['es']['over'] = 'Mas de';
+    $lang['es']['results'] = 'Resultados';
+    $lang['es']['email_the_agent'] = 'Enviar Email al Agente';
+    $lang['es']['login'] = 'Acceder';
+    $lang['es']['property_consultation'] = 'Consulta de Propiedad';
+    $lang['es']['details'] = 'Detalles';
+    $lang['es']['photos'] = 'Fotos';
+    $lang['es']['map'] = 'Mapa';
+    $lang['es']['yes'] = 'Si';
+    $lang['es']['no'] = 'No';
+    $lang['es']['developments'] = 'Desarrollos';
+
+    ?>

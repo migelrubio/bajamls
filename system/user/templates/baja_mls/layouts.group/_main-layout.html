@@ -1,0 +1,132 @@
+<!doctype html>
+<html dir="ltr" lang="{lang}">
+	<head>
+		<meta charset="utf-8">
+		<title>{layout:title}{site_name}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- meta data -->
+		{if layout:meta_author}<meta name="author" content="{layout:meta_author}">{/if}
+		{if layout:meta_description}<meta name="description" content="{layout:meta_description}">{/if}
+
+		<!-- open graph common -->
+		<meta property="og:site_name" content="{site_name}">
+		<meta property="og:type" content="website">
+		<meta property="og:image" content="{theme_folder_url}site/default/asset/img/og/default.jpg"> {!-- square, 50*50 min --}
+
+		{if layout:og_title != ''}
+			<!-- open graph per page -->
+			<meta property="og:title" content="{layout:og_title}">
+			<meta property="og:url" content="{layout:og_url}">
+			<meta property="og:description" content="{layout:og_description}">
+		{/if}
+		<!-- Font Awesome -->
+    	<!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"-->
+		<!--Import Google Icon Font-->
+      	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+  		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+		<!-- Bootstrap Core -->
+        <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous"-->
+		<!-- Material Design Bootstrap -->
+		<!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.5/css/mdb.min.css"-->
+		<!--<link href="{theme_folder_url}site/default/asset/style/default.min.css" title="common-styles" rel="stylesheet">-->
+		<!-- <link href="{theme_folder_url}site/default/asset/style/debug.min.css" title="common-styles" rel="stylesheet"> -->
+		<!-- Custom Styles -->
+        <link href="{theme_folder_url}site/default/asset/style/custom.css" title="common-styles" rel="stylesheet">
+		<style>
+			.navbar-fixed {
+				height:none:
+			}
+			nav {
+				background-color:rgba(255,255,255,.8);
+			}
+			.brand-logo img {
+				margin-top:10px
+			}
+			.nav-wrapper ul li a {
+				color:#6197c2;
+			}
+			nav ul a:hover {
+				background-color:transparent;
+			}
+			nav.nav-center ul {
+				text-align: center;
+			}
+			nav.nav-center ul li {
+				display: inline;
+				float: none;
+			}
+			nav.nav-center ul li a {
+				display: inline-block;
+				text-transform: uppercase;
+    			font-size: 1.1rem;
+			}
+			nav.nav-center ul li a.logo {
+				margin-top : 10px;
+			}
+			.breadcrumb:before {
+				color: #6197c2;
+			}
+		</style>
+		{layout:styles}
+	</head>
+    <body class="blue-grey lighten-5">
+		<div class="navbar-fixed">
+			<nav class="nav-center">
+				<div class="nav-wrapper center-align">
+					<div class="brand-logo center hide-on-large-only">
+						<a href="/"><img src="/images/logo2.png"></a>
+					</div>
+					<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+					<ul class="hide-on-med-and-down center">
+						<li><a href="#">About</a></li>
+						<li><a href="#">Locations</a></li>
+						<li><a href="/" class="logo"><img src="/images/logo2.png"></a></li>
+						<li><a href="/listing">Listing</a></li>
+						<li><a href="#">Contact</a></li>
+					</ul>
+					<ul class="side-nav" id="mobile-demo">
+						<li><a href="#">About</a></li>
+						<li><a href="#">Locations</a></li>
+						<li><a href="/listing">Listing</a></li>
+						<li><a href="#">Contact</a></li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+
+
+        
+		{layout:contents}
+		
+
+
+		<!-- JQuery -->
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		<!-- Materialize -->
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+        <!-- Bootstrap dropdown -->
+		<!--script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script-->
+		<!-- Bootstrap core JavaScript -->
+        <!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script-->
+		<!-- MDB core JavaScript -->
+		<!--script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.5/js/mdb.min.js" crossorigin="anonymous"></script-->
+		<script>
+			$( document ).ready(function(){
+				$(".button-collapse").sideNav();
+				/*$('.carousel.fullWidth').carousel({
+					fullWidth:true,
+					indicators:true
+				});
+				$('.materialboxed').materialbox();*/
+				$('.slider').slider();
+			});
+			$( document ).on("scroll", function(){
+				//changes navbar alpha on scroll
+				$("nav").css("background-color","rgba(255,255,255,"+($( document ).scrollTop() + 80) / 100 +")");
+			});
+		</script>
+		{layout:scripts}
+	</body>
+</html>
