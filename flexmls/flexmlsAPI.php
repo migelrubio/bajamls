@@ -66,6 +66,7 @@ class flexmlsAPI {
 				$code = $this->last_error_code;
 				$message = $this->last_error_mess;
 				throw new Exception($message, $code, $previous);
+				//throw new Exception($message, $code);
 				return false;
 			}
 

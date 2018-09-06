@@ -20,12 +20,14 @@
 			<meta property="og:url" content="{layout:og_url}">
 			<meta property="og:description" content="{layout:og_description}">
 		{/if}
+		<link href="{site_url}favicon1.ico" rel="shortcut icon">
 		<!-- Font Awesome -->
     	<!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"-->
 		<!--Import Google Icon Font-->
       	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<!--Import materialize.css-->
-  		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  		<!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css"-->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 		<!-- Bootstrap Core -->
         <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous"-->
 		<!-- Material Design Bootstrap -->
@@ -33,79 +35,147 @@
 		<!--<link href="{theme_folder_url}site/default/asset/style/default.min.css" title="common-styles" rel="stylesheet">-->
 		<!-- <link href="{theme_folder_url}site/default/asset/style/debug.min.css" title="common-styles" rel="stylesheet"> -->
 		<!-- Custom Styles -->
-        <link href="{theme_folder_url}site/default/asset/style/custom.css" title="common-styles" rel="stylesheet">
-		<style>
-			.navbar-fixed {
-				height:none:
-			}
-			nav {
-				background-color:rgba(255,255,255,.8);
-			}
-			.brand-logo img {
-				margin-top:10px
-			}
-			.nav-wrapper ul li a {
-				color:#6197c2;
-			}
-			nav ul a:hover {
-				background-color:transparent;
-			}
-			nav.nav-center ul {
-				text-align: center;
-			}
-			nav.nav-center ul li {
-				display: inline;
-				float: none;
-			}
-			nav.nav-center ul li a {
-				display: inline-block;
-				text-transform: uppercase;
-    			font-size: 1.1rem;
-			}
-			nav.nav-center ul li a.logo {
-				margin-top : 10px;
-			}
-			.breadcrumb:before {
-				color: #6197c2;
-			}
-		</style>
+        <link href="{theme_folder_url}asset/css/custom.css" title="common-styles" rel="stylesheet">
 		{layout:styles}
 	</head>
+	<?php
+		require($_SERVER['DOCUMENT_ROOT'] . "/app/config.php");
+		$language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+		echo $language;
+		switch ($language){
+			case "es":
+				include($_SERVER['DOCUMENT_ROOT'] . "/lang/es.php");
+				break;
+			default:
+				include($_SERVER['DOCUMENT_ROOT'] . "/lang/en.php");
+				break;
+		}
+	?>
     <body class="blue-grey lighten-5">
 		<div class="navbar-fixed">
 			<nav class="nav-center">
 				<div class="nav-wrapper center-align">
 					<div class="brand-logo center hide-on-large-only">
-						<a href="/"><img src="/images/logo2.png"></a>
+						<a href="/"><img src="/images/logo2.png" height="50px"></a>
 					</div>
-					<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+					<a href="#" data-target="mobile-demo" data-activates="mobile-demo" class="sidenav-trigger button-collapse"><i class="material-icons">menu</i></a>
 					<ul class="hide-on-med-and-down center">
-						<li><a href="#">About</a></li>
-						<li><a href="#">Locations</a></li>
-						<li><a href="/" class="logo"><img src="/images/logo2.png"></a></li>
-						<li><a href="/listing">Listing</a></li>
-						<li><a href="#">Contact</a></li>
-					</ul>
-					<ul class="side-nav" id="mobile-demo">
-						<li><a href="#">About</a></li>
-						<li><a href="#">Locations</a></li>
-						<li><a href="/listing">Listing</a></li>
-						<li><a href="#">Contact</a></li>
-					</ul>
+						<li>
+							<a href="#">
+								<?=$lang["agents"]?>
+							</a>
+						</li>
+						<li>
+							<a href="/listing">
+								<?=$lang["properties"]?>
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-trigger" href="#" data-target="buyers-dropdown">
+							<?=$lang["buyers"]."/".$lang["sellers"]?>
+							</a>
+						</li>
+						<li>
+							<a href="/" class="logo">
+								<img src="/images/logo2.png" height="50px">
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-trigger" href="#" data-target="locations-dropdown">
+								<?=$lang["communities"]?>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<?=$lang["resources"]?>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<?=$lang["contact"]?>
+							</a>
+						</li>
+						<!--li><a href="#">Español</a></li-->
+					</ul>	
+					
 				</div>
 			</nav>
 		</div>
 
+		<div id="buyers-dropdown" class="subnav">
+			<ul>
+				<li><a href="#">buyers</a></li>
+				<li><a href="#!">sellers</a></li>
+			</ul>
+		</div>
+
+		<div id="locations-dropdown" class="subnav">
+			<ul>
+				<?php
+					foreach ($cities as $k => $i) {
+				?>
+					<li><a href="/<?=$k?>"><?=$i["name"]?></a></li>
+				<?php
+					}
+				?>
+			</ul>
+		</div>
+		
+		<ul class="sidenav side-nav" id="mobile-demo">
+			<li class="center">
+				<img src="/images/diamante_shiny.jpg" height="100">
+			</li>
+			<li>
+				<a href="#">
+					<?=$lang["agents"]?>
+				</a>
+			</li>
+			<li>
+				<a href="/listing">
+					<?=$lang["properties"]?>
+				</a>
+			</li>
+			<li>
+				<a class="subnav-trigger" href="#" data-target="buyers-dropdown">
+				<?=$lang["buyers"]."/".$lang["sellers"]?>
+				</a>
+			</li>
+			<li>
+				<a class="subnav-trigger" href="#" data-target="locations-dropdown">
+					<?=$lang["communities"]?>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<?=$lang["resources"]?>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<?=$lang["contact"]?>
+				</a>
+			</li>
+		</ul>
+		
+		
+
+
 
         
 		{layout:contents}
-		
 
+		<footer>
+			<div class="footer-top"></div>
+			<div class="footer-bottom">
+				<p class="center">© 2015 Diamante Asociados S. de R. L. de C. V.</p>
+			</div>
+		</footer>
 
 		<!-- JQuery -->
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 		<!-- Materialize -->
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  		<!--script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
         <!-- Bootstrap dropdown -->
 		<!--script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script-->
 		<!-- Bootstrap core JavaScript -->
@@ -114,7 +184,16 @@
 		<!--script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.5/js/mdb.min.js" crossorigin="anonymous"></script-->
 		<script>
 			$( document ).ready(function(){
-				$(".button-collapse").sideNav();
+				/* 1.0.0-rc.2 */
+				/*
+				$(".sidenav").sidenav();
+				$('select').formSelect();
+				*/
+				/* 0.100.2 */
+				$(".sidenav-trigger").sideNav();
+				$('select').material_select();
+
+				boundDropdowns();
 				/*$('.carousel.fullWidth').carousel({
 					fullWidth:true,
 					indicators:true
@@ -124,8 +203,43 @@
 			});
 			$( document ).on("scroll", function(){
 				//changes navbar alpha on scroll
-				$("nav").css("background-color","rgba(255,255,255,"+($( document ).scrollTop() + 80) / 100 +")");
+				var scroll = $( document ).scrollTop();
+				$("nav, .subnav ul").css("background-color","rgba(255,255,255,"+(scroll + 80) / 100 +")");
+				if (scroll < 240) {
+					$("nav ul").css("margin", 30 - (scroll * .1) + "px 0");
+					$(".subnav").css("padding-top", $(".nav-center").height());
+					//$(".logo img").height(100 - (scroll/6));
+				}
 			});
+			function boundDropdowns() {
+				$(".dropdown-trigger").hover(function(){
+					pos = $(this).position();
+					width = $(this).outerWidth();
+					height = $(this).height();
+					//margin = $(this).css("margin-left");
+					//top = $(".nav-center").height();
+					//console.log($(".nav-center").height());
+					subnav = $("#"+$(this).data("target"));
+					center = pos.left + (width/2);
+					left = center - (subnav.outerWidth()/2);
+					subnav.css("padding-top", $(".nav-center").height() + "px").css("left", left).css("min-width", width);
+					subnav.slideDown("normal", function(){
+						$(".subnav").css("z-index",998);
+					});
+					
+				}, function(){
+					//$("#"+$(this).data("target")).slideUp();
+					dummy = 0;
+				});
+				$(".subnav").hover(function(){
+					//nothing;
+					dummy = 0;
+				},function(){
+					$(".subnav").css("z-index", 990);
+					$(this).slideUp();
+				});
+				$(".subnav").hide();
+			}
 		</script>
 		{layout:scripts}
 	</body>

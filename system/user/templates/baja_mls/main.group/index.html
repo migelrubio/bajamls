@@ -4,16 +4,303 @@
     <style>
         #home-carousel {
             top:-64px;
+            height:calc(100vh + 64px);
+        }
+        #home-carousel .carousel-item{
+            height:100%;
+            background-position: center center;
+            background-size: cover;
         }
     </style>
 {/layout:set}
 
+<?php
+    require($_SERVER['DOCUMENT_ROOT'] . "/app/config.php");
+    require_once($_SERVER['DOCUMENT_ROOT'] . "/flexmls/flexmlsAPI.php");
+    require_once($_SERVER['DOCUMENT_ROOT'] . "/lang/lang.php");
+    //$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    $api = new flexmlsAPI("cab_westerlund_key_1", "5lCZrVg8d4uYSviaNIN4t");
+    $api->SetApplicationName("Diamante-MLS-Search/1.0");
+    $api->SetDeveloperMode(false);
+    $auth = $api->Authenticate();
+    if ($auth === false) api_error_thrown($api);
+    //$cities = ["la-paz","la-ventana","todos-santos","cabo-san-lucas","san-jose-del-cabo","east-cape"];
+    $city = isset($cities["{segment_1}"]) ? "{segment_1}" : "all";
+    $city_name = isset($cities[$city]["name"]) ? $cities[$city]["name"] : "";
+    $property_type = "all";
+    $list_price = "all";
+    $portal = 0;
+    $language = isset($_GET['lang']) ? trim($_GET['lang']) : 'en';
+
+    $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
+    $hostName = $_SERVER['HTTP_HOST'];
+    $base_url = $protocol.$hostName;
+    
+    $exchange_rate = 1;
+
+    $parameters = null;
+    $listings = null;
+    
+    if($language == 'es') {
+        $xml = simplexml_load_file("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml")->Cube[0]->Cube[0];
+        $usd = 0;
+        $mxn = 0;
+        foreach ($xml->Cube as $item) {
+            if((string)$item['currency'] === 'USD')
+                $usd = (real)$item['rate'];
+                
+            if((string)$item['currency'] === 'MXN')
+                $mxn = (real)$item['rate'];
+        }
+
+        $exchange_rate = $mxn/$usd;
+    }
+
+    $cityQuery = "";
+    if (isset($cities[$city]["query"])) $cityQuery = $cities[$city]["query"];
+
+    $parameters = array("_filter" => $cityQuery, "_expand" => 'PrimaryPhoto', "_limit" => 8, "_orderby" => '-ListPrice');
+    $listings = $api->GetMyListings($parameters);
+    //$listings = $api->GetMyListings();
+    //$listings = $api->GetListings($parameters);
+?>
 <div id="home-carousel" class="carousel carousel-slider">
-    <a class="carousel-item" href="#one!"><img src="https://loremflickr.com/1600/920/mexico?random=1"></a>
-    <a class="carousel-item" href="#two!"><img src="https://loremflickr.com/1600/920/mexico?random=2"></a>
-    <a class="carousel-item" href="#three!"><img src="https://loremflickr.com/1600/920/mexico?random=3"></a>
-    <a class="carousel-item" href="#four!"><img src="https://loremflickr.com/1600/920/mexico?random=4"></a>
-    <a class="carousel-item" href="#four!"><img src="https://loremflickr.com/1600/920/mexico?random=5"></a>
+    <?php
+        $images = [];
+        if ($city_name == "") {
+            foreach($cities as $key => $item) {
+                $imgs = array_slice(scandir($_SERVER['DOCUMENT_ROOT']."/images/layout/slider/hd/".$key),2);
+                foreach ($imgs as $img) {
+                    $i = ["url" => $key."/".$img, "caption" => $item["name"]];
+                    array_push($images,$i);
+                }
+            }
+            shuffle($images); 
+            foreach($images as $image) { ?>
+                <a class="carousel-item" href="#" style="background-image: url('/images/layout/slider/hd/<?=$image["url"]?>')">
+                    <h3 class="slide-caption"><?=$image["caption"]?></h3>
+                </a>
+            <?php }
+        } else {
+            $images = array_slice(scandir($_SERVER['DOCUMENT_ROOT']."/images/layout/slider/hd/".$city),2); //array_slice to get rid of . and .. elements
+            shuffle($images);
+            foreach($images as $image) { ?>
+                <a class="carousel-item" href="#" style="background-image: url('/images/layout/slider/hd/<?=$city?>/<?=$image?>')">
+                    <h3 class="slide-caption"><?=$city_name?></h3>
+                </a>
+            <?php }
+        }
+    ?>
+</div><!--home-carousel-->
+
+    <div class="card quickSearch">
+        <div class="card-content">
+            <div class="container">
+                <div class="card-title center">
+                    Quick Search <?php if ($city_name != "") echo " in ".$city_name; ?> 
+                </div>
+                <div class="row">
+                    <form class="col s12">
+                    <div class="row">
+                        <!--div class="input-field col s12 m6 l3">
+                            <input id="mls_number" type="text" class="validate">
+                            <label for="mls_number">MLS Number</label>
+                        </div-->
+                        <div class="input-field col s12 m6 l3">
+                            <select id="city">
+                                <option value="all"><?php echo $lang[$language]['any']; ?></option>
+                                <?php 
+                                    foreach($cities as $k => $i) {
+                                ?>
+                                        <option value="<?=$k?>" <?=$k==$city ? "selected" : ""?>><?=$i["name"]?></option>
+                                <?php
+                                    }
+                                ?>
+                            </select>
+                            <label>City</label>
+                        </div>
+                        <div class="input-field col s12 m6 l3">
+                            <select id="property_type">
+                                <option value="all"><?php echo $lang[$language]['any']; ?></option>
+                                <option value="condos" <?php echo $property_type == "condos" ? "selected" : ""?>><?php echo $lang[$language]['condos']; ?></option>
+                                <option value="houses" <?php echo $property_type == "houses" ? "selected" : ""?>><?php echo $lang[$language]['houses']; ?></option>
+                                <option value="townhouses" <?php echo $property_type == "townhouses" ? "selected" : ""?>><?php echo $lang[$language]['townhouses']; ?></option>
+                                <option value="land" <?php echo $property_type == "land" ? "selected" : ""?>><?php echo $lang[$language]['land']; ?></option>
+                                <option value="commercial" <?php echo $property_type == "commercial" ? "selected" : ""?>><?php echo $lang[$language]['commercial']; ?></option>
+                                <option value="business" <?php echo $property_type == "business" ? "selected" : ""?>><?php echo $lang[$language]['business']; ?></option>
+                                <option value="multifamily" <?php echo $property_type == "multifamily" ? "selected" : ""?>><?php echo $lang[$language]['multifamily']; ?></option>
+                            </select>
+                            <label>Property type</label>
+                        </div>
+                        <div class="input-field col s12 m6 l3">
+                            <select id="list_price">
+                                <option value="all"><?php echo $lang[$language]['any']; ?></option>
+                                <option value="0" <?php echo $list_price == "0" ? "selected" : ""?>><?php echo $lang[$language]['under']; ?> 200,000 USD</option>
+                                <option value="200K" <?php echo $list_price == "200K" ? "selected" : ""?>>200,000 - 500,000 USD</option>
+                                <option value="500K" <?php echo $list_price == "500K" ? "selected" : ""?>>500,000 - 1,000,000 USD</option>
+                                <option value="1M" <?php echo $list_price == "1M" ? "selected" : ""?>><?php echo $lang[$language]['over']; ?> 1,000,000 USD</option>
+                            </select>
+                            <label>Price</label>
+                        </div>
+                        <div class="input-field col s12 m6 l3 center">
+                            <a id="searchBtn" class="btn waves-effect waves-light white blue-text text-darken-4">Search
+                                <i class="material-icons right">search</i>
+                            </a>
+                        </div>
+                    </div>
+                </div><!--row-->
+            </div><!--container-->
+        </div>
+    </div><!--quickSearch card-->
+
+
+
+<div class="container ctas">
+    <div class="row">
+        <div class="col s12 m6 l3">
+            <div class="card">
+                <div class="card-image">
+                    <a href="">
+                        <img src="/images/layout/cta1.jpg">
+                        <div class="card-overlay"></div>
+                        <p class="card-title"><span class="t1">Find my</span><br><span class="t2">dream home</span></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m6 l3">
+            <div class="card">
+                <div class="card-image">
+                    <a href="">
+                        <img src="/images/layout/cta2.jpg">
+                        <div class="card-overlay"></div>
+                        <p class="card-title"><span class="t1">What's my</span><br><span class="t2">home worth?</span></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m6 l3">
+            <div class="card">
+                <div class="card-image">
+                    <a href="">
+                        <img src="/images/layout/cta3.jpg">
+                        <div class="card-overlay"></div>
+                        <p class="card-title"><span class="t1">Help me</span><br><span class="t2">relocate</span></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m6 l3">
+            <div class="card">
+                <div class="card-image">
+                    <a href="">
+                        <img src="/images/layout/cta4.jpg">
+                        <div class="card-overlay"></div>
+                        <p class="card-title"><span class="t1">Sign up for</span><br><span class="t2">email updates</span></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12 m3"><hr></div>
+    <div class="col s12 m6"><h2>Featured Listings</h2></div>
+    <div class="col s12 m3"><hr></div>
+</div>
+
+<div class="carousel featured">
+    <?php 
+    shuffle($listings);
+    foreach($listings as $listing) {
+        if($language == 'es'){
+            $price = "$" . number_format($listing["StandardFields"]["ListPrice"] * $exchange_rate,2) . " MXN";
+        }
+        else{
+            $price = "$" . number_format($listing["StandardFields"]["ListPrice"],2) . " USD";
+        }
+
+        if (sizeof($listing["StandardFields"]["Photos"]) > 0) {
+            $thumb = $listing["StandardFields"]["Photos"][0]["Uri800"];
+        } else {
+            $thumb = 'http://www.placehold.it/800x250?text=NO+PHOTO';
+        }
+
+        $stai = $listing["StandardFields"]["StreetAdditionalInfo"];
+        $stnu = $listing["StandardFields"]["StreetNumber"];
+        $stna = $listing["StandardFields"]["StreetName"];
+        //echo $stai . $stnu . $stna;
+        $street = $stai != '********' ? $stai . ' ' : '';
+        $street .= $stnu != '********' ? $stnu . ' ' : '';
+        $street .= $stna != '********' ? $stna . ' ' : ''; ?>
+
+        <div class="card hoverable sticky-action carousel-item">
+            <div class="card-image" style="height:100%; width:100%; background-repeat: no-repeat; background-size: cover; background-position: center;background-image:url('<?php echo $thumb ?>');">
+                <a href="<?php echo $base_url."/listing/detail/".$listing["StandardFields"]["ListingId"] ?>"
+                    <span class="card-title"><?php echo $price ?></span><br>
+                    <span class="truncate"><?php echo $street ?></span>
+                </a>
+            </div>
+        </div>
+    <?php } ?>
+</div>
+
+
+<div class="row welcome" style="background-image: url('/images/layout/welcome-bg.jpg')">
+    <div class="container">
+        <div class="col s12 m6">
+            <p class="center"><img src="/images/logo2.png"></p>
+            <hr>
+            <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis lectus metus. Nunc sollicitudin diam at nisi dignissim varius. Morbi tempus felis in accumsan facilisis. Aliquam in mi sit amet justo dictum molestie. Vivamus sit amet sem sit amet lorem pharetra efficitur. Etiam feugiat suscipit luctus. Donec ac est a mi scelerisque vulputate.</p>
+            <p>In vehicula, metus in fringilla rhoncus, dolor ligula aliquam velit, vehicula porta enim justo eget dui. Nam luctus est id ex ornare, in blandit nunc ornare. Nulla commodo ipsum ut arcu ullamcorper ullamcorper. Fusce accumsan varius velit. Vivamus sollicitudin, nibh vitae malesuada ornare, metus libero dictum nibh, sit amet faucibus diam nisi eget arcu. Aenean imperdiet odio accumsan pulvinar consequat. Suspendisse malesuada nisi est, non pretium dolor condimentum non. Vestibulum nibh nunc, fringilla sed mollis non, pellentesque vitae leo. </p>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col s12 m3"><hr></div>
+    <div class="col s12 m6"><h2>Featured Developments</h2></div>
+    <div class="col s12 m3"><hr></div>
+</div>
+
+<div class="container ctas">
+    <div class="row">
+        <div class="col s12 m12 l4">
+            <div class="card">
+                <div class="card-image">
+                    <a href="">
+                        <img src="/images/layout/terrazas.jpg">
+                        <div class="card-overlay"></div>
+                        <p class="card-title"><span class="t2">terrazas by alttus</span></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m12 l4">
+            <div class="card">
+                <div class="card-image">
+                    <a href="">
+                        <img src="/images/layout/costa-baja.jpg">
+                        <div class="card-overlay"></div>
+                        <p class="card-title"><span class="t2">costa baja resort</span></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m12 l4">
+            <div class="card">
+                <div class="card-image">
+                    <a href="">
+                        <img src="/images/layout/pedregal.jpg">
+                        <div class="card-overlay"></div>
+                        <p class="card-title"><span class="t2">pedregal de la paz</span></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {layout:set name="scripts"}
@@ -24,5 +311,16 @@
             $('.carousel').carousel('next');
             setTimeout(autoplay, 5000);
         }
+        $('.carousel.featured').carousel();
+
+        $("#searchBtn").click(function(){
+            var redirect = "/listing";
+                redirect += "/"+$("#city").val();
+                redirect += "/"+$("#property_type").val();
+                redirect += "/"+$("#list_price").val();
+            console.log(redirect);
+            $(this).addClass('disabled');
+            window.location.href = redirect;
+        });
     </script>
 {/layout:set}

@@ -8,6 +8,9 @@
         .search-car .card-content row {
             margin-bottom:0;
         }
+        main {
+            margin-top: 150px;
+        }
     </style>
 {/layout:set}
 
@@ -35,7 +38,7 @@
     $development = isset($_GET['development']) ? trim($_GET['development']) : '';
     $language = isset($_GET['lang']) ? trim($_GET['lang']) : 'en';
     //$page = isset($_GET['page']) ? trim($_GET['page']) : 1;
-    $page = is_numeric("{segment_5}") ? {segment_5}  : 1;
+    $page = is_numeric("{segment_5}") ? "{segment_5}"  : 1;
     $featured = isset($_GET['featured']) ? $_GET['featured'] : 0;
 
     $exchange_rate = 1;
@@ -341,7 +344,7 @@
         });
     </script-->
     <script>
-        $('select').material_select();
+        //$('select').formSelect();
 
         $("#searchBtn").click(function(){
             var redirect = "/listing";
