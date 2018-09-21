@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -155,6 +155,26 @@ class Request {
 	public function method()
 	{
 		return strtoupper($this->server('REQUEST_METHOD', 'GET'));
+	}
+
+	/**
+	 * Is this a POST request?
+	 *
+	 * @return 	boolean
+	 */
+	public function isPost()
+	{
+		return ($this->method() == 'POST');
+	}
+
+	/**
+	 * Is this a GET request?
+	 *
+	 * @return 	boolean
+	 */
+	public function isGet()
+	{
+		return ($this->method() == 'GET');
 	}
 
 	/**

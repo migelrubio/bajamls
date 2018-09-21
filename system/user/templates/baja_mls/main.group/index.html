@@ -3,8 +3,8 @@
 {layout:set name="styles"}
     <style>
         #home-carousel {
-            top:-64px;
-            height:calc(100vh + 64px);
+            /*top:-64px;*/
+            height:100vh;
         }
         #home-carousel .carousel-item{
             height:100%;
@@ -67,7 +67,7 @@
 <div id="home-carousel" class="carousel carousel-slider">
     <?php
         $images = [];
-        if ($city_name == "") {
+        /*if ($city_name == "") {
             foreach($cities as $key => $item) {
                 $imgs = array_slice(scandir($_SERVER['DOCUMENT_ROOT']."/images/layout/slider/hd/".$key),2);
                 foreach ($imgs as $img) {
@@ -89,7 +89,13 @@
                     <h3 class="slide-caption"><?=$city_name?></h3>
                 </a>
             <?php }
-        }
+        }*/
+        /*poner solo las imagenes que estan en la carpeta raiz para todas las ciudades y sin el nombre de la ciudad (temporalmente) */
+        $images = array_slice(scandir($_SERVER['DOCUMENT_ROOT']."/images/layout/slider/hd/"),2); //array_slice to get rid of . and .. elements
+            shuffle($images);
+            foreach($images as $image) { ?>
+                <a class="carousel-item" href="#" style="background-image: url('/images/layout/slider/hd/<?=$image?>')"></a>
+            <?php }
     ?>
 </div><!--home-carousel-->
 
@@ -153,7 +159,24 @@
         </div>
     </div><!--quickSearch card-->
 
+<?php
+if ($city_name != "") {
+?>
+    {exp:channel:entries channel="communities" limit="1" url_title="{segment_1}"}
+    <div class="row">
+        <div class="col s12 m3"><hr></div>
+        <div class="col s12 m6"><h2>About {title}</h2></div>
+        <div class="col s12 m3"><hr></div>
+    </div>
+    <div class="container">
+        {communities_about}
+    </div>
+    {/exp:channel:entries}
+<?php
+}
+?>
 
+<div class="spacer-100"></div>
 
 <div class="container ctas">
     <div class="row">
@@ -247,13 +270,21 @@
 </div>
 
 
-<div class="row welcome" style="background-image: url('/images/layout/welcome-bg.jpg')">
+<div class="row welcome" style="background-color:#dbe5ef; /*background-image: url('/images/layout/welcome-bg.jpg')*/">
     <div class="container">
         <div class="col s12 m6">
             <p class="center"><img src="/images/logo2.png"></p>
             <hr>
-            <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis lectus metus. Nunc sollicitudin diam at nisi dignissim varius. Morbi tempus felis in accumsan facilisis. Aliquam in mi sit amet justo dictum molestie. Vivamus sit amet sem sit amet lorem pharetra efficitur. Etiam feugiat suscipit luctus. Donec ac est a mi scelerisque vulputate.</p>
-            <p>In vehicula, metus in fringilla rhoncus, dolor ligula aliquam velit, vehicula porta enim justo eget dui. Nam luctus est id ex ornare, in blandit nunc ornare. Nulla commodo ipsum ut arcu ullamcorper ullamcorper. Fusce accumsan varius velit. Vivamus sollicitudin, nibh vitae malesuada ornare, metus libero dictum nibh, sit amet faucibus diam nisi eget arcu. Aenean imperdiet odio accumsan pulvinar consequat. Suspendisse malesuada nisi est, non pretium dolor condimentum non. Vestibulum nibh nunc, fringilla sed mollis non, pellentesque vitae leo. </p>
+            <p>Diamante Realtors has been in business for 15 years in the Baja.  Under the able leadership of its broker, Brian Westerlund (originally from Vancouver, Canada) Diamante is the premiere brokerage for foreign and Mexican buyers in La Paz.</p>
+
+            <p>With 15 bilingual agents in total and offices in Cabo, La Ventana and La Paz, Diamante works throughout the region providing honest and professional advice and assistance to buyers and sellers.  We have completed over 700 sales and have represented buyers and sellers alike in negotiating all kinds of closings.  We have successfully worked with eight developers and have sold out numerous projects. Our most recent project Torres Cantera condominiums, (84 units) sold out in under 2 years.  We worked with the developer from design stage to closing.</p> 
+
+            <p>Our expertise and knowledge of real estate in the Baja is legendary.  We know every aspect of the business and we are well connected to notaries, other brokers, accountants, closing attorneys and tradespeople.  We actively work to protect our clients from any pitfall we may encounter and we work to ensure that our clients not only find the perfect property but are happily settled in it as well.  Most of our clients become friends… and recommend us to their friends.  That is something we are proud of!</p>
+
+            <p>We are proud of our team and if you are looking for the best, the most knowledgeable and honest brokerage in the Baja … you have come to the right place.</p>
+
+            <p>Welcome home!</p>
+</p>
         </div>
     </div>
 </div>

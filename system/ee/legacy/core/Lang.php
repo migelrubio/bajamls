@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -80,13 +80,16 @@ class EE_Lang {
 		$langfile .= '.php';
 
 		// Check to see if it's already loaded
-		if (in_array($langfile, $this->is_loaded, TRUE))
+		if (in_array($langfile, $this->is_loaded, TRUE) && ! $return)
 		{
 			return;
 		}
 
 		$deft_lang = ee()->config->item('deft_lang') ?: 'english';
-		$idiom = $this->getIdiom();
+		if (empty($idiom))
+		{
+			$idiom = $this->getIdiom();
+		}
 
 		$paths = array(
 			// Check custom languages first
@@ -115,6 +118,8 @@ class EE_Lang {
 			// Temporary! Rename your language files!
 			$third_party_old = 'lang.'.str_replace('_lang.', '.', $langfile);
 
+			array_unshift($paths, $alt_path.'language/english/'.$third_party_old);
+			array_unshift($paths, $alt_path.'language/english/'.$langfile);
 			array_unshift($paths, $alt_path.'language/'.$deft_lang.'/'.$third_party_old);
 			array_unshift($paths, $alt_path.'language/'.$idiom.'/'.$third_party_old);
 			array_unshift($paths, $alt_path.'language/'.$deft_lang.'/'.$langfile);

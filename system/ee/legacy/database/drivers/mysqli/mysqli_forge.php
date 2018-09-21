@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -83,14 +83,32 @@ class CI_DB_mysqli_forge extends CI_DB_forge {
 					$sql .= ' UNSIGNED';
 				}
 
-				if (array_key_exists('DEFAULT', $attributes))
-				{
-					$sql .= ' DEFAULT \''.$attributes['DEFAULT'].'\'';
-				}
-
 				if (array_key_exists('NULL', $attributes))
 				{
 					$sql .= ($attributes['NULL'] === TRUE) ? ' NULL' : ' NOT NULL';
+				}
+
+				if (array_key_exists('DEFAULT', $attributes))
+				{
+					// wrap default in a string with two exceptions
+					if (
+						$attributes['DEFAULT'] == 'CURRENT_TIMESTAMP' &&
+						array_key_exists('TYPE', $attributes) &&
+						in_array($attributes['TYPE'], ['datetime', 'timestamp'])
+					)
+					{
+						$default = 'CURRENT_TIMESTAMP';
+					}
+					elseif ($attributes['DEFAULT'] === NULL)
+					{
+						$default = 'NULL';
+					}
+					else
+					{
+						$default = "'{$attributes['DEFAULT']}'";
+					}
+
+					$sql .= ' DEFAULT '.$default;
 				}
 
 				if (array_key_exists('AUTO_INCREMENT', $attributes) && $attributes['AUTO_INCREMENT'] === TRUE)

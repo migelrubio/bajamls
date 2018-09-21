@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -54,11 +54,17 @@ class ChannelField extends FieldModel {
 			),
 			'weak' => TRUE
 		),
+		'SearchExcerpts' => array(
+			'type' => 'hasMany',
+			'model' => 'Channel',
+			'to_key' => 'search_excerpt',
+			'weak' => TRUE
+		),
 	);
 
 	protected static $_validation_rules = array(
 		'site_id'              => 'required|integer',
-		'field_name'           => 'required|unique|validateNameIsNotReserved|maxLength[32]',
+		'field_name'           => 'required|alphaDash|unique|validateNameIsNotReserved|maxLength[32]',
 		'field_label'          => 'required|maxLength[50]',
 		'field_type'           => 'validateIsCompatibleWithPreviousValue',
 	//	'field_list_items'     => 'required',
@@ -160,6 +166,12 @@ class ChannelField extends FieldModel {
 	{
 		$this->removeFromLayouts();
 		$this->removeFromFluidFields();
+
+		foreach ($this->SearchExcerpts as $channel)
+		{
+			$channel->search_excerpt = NULL;
+			$channel->save();
+		}
 	}
 
 	public function getAllChannels()
@@ -252,49 +264,6 @@ class ChannelField extends FieldModel {
 				$fluid_field->save();
 			}
 		}
-	}
-
-	public function getCompatibleFieldtypes()
-	{
-		$fieldtypes = array();
-		$compatibility = array();
-
-		foreach (ee('Addon')->installed() as $addon)
-		{
-			if ($addon->hasFieldtype())
-			{
-				foreach ($addon->get('fieldtypes', array()) as $fieldtype => $metadata)
-				{
-					if (isset($metadata['compatibility']))
-					{
-						$compatibility[$fieldtype] = $metadata['compatibility'];
-					}
-				}
-
-				$fieldtypes = array_merge($fieldtypes, $addon->getFieldtypeNames());
-			}
-		}
-
-		if ($this->field_type)
-		{
-			if ( ! isset($compatibility[$this->field_type]))
-			{
-				return array($this->field_type => $fieldtypes[$this->field_type]);
-			}
-
-			$my_type = $compatibility[$this->field_type];
-
-			$compatible = array_filter($compatibility, function($v) use($my_type)
-			{
-				return $v == $my_type;
-			});
-
-			$fieldtypes = array_intersect_key($fieldtypes, $compatible);
-		}
-
-		asort($fieldtypes);
-
-		return $fieldtypes;
 	}
 
 	/**

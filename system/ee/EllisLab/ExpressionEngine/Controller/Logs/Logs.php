@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -58,6 +58,11 @@ class Logs extends CP_Controller {
 		if (ee()->session->userdata('group_id') == 1)
 		{
 			$item = $logs->addItem(lang('developer_log'), ee('CP/URL')->make('logs/developer'));
+		}
+
+		if (ee('Permission')->has('can_manage_consents'))
+		{
+			$item = $logs->addItem(lang('consent_log'), ee('CP/URL')->make('logs/consent'));
 		}
 
 		$item = $logs->addItem(lang('cp_log'), ee('CP/URL')->make('logs/cp'));

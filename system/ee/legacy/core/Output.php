@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -334,7 +334,7 @@ class EE_Output {
 
 		// Do we need to generate profile data?
 		// If so, load the Profile service and run it.
-		if ($this->enable_profiler == TRUE && ! ee()->input->is_ajax_request())
+		if ($this->enable_profiler == TRUE && ( ! AJAX_REQUEST OR ee('LivePreview')->hasEntryData()))
 		{
 			$performance = 	array(
 				'database' => number_format(ee('Database')->currentExecutionTime(), 4),
@@ -360,10 +360,7 @@ class EE_Output {
 				ee()->TMPL->debugging === TRUE &&
 				ee()->TMPL->template_type != 'js')
 			{
-				if (ee()->session->userdata('group_id') == 1)
-				{
-					$profiler->addSection('template', ee()->TMPL->log);
-				}
+				$profiler->addSection('template', ee()->TMPL->log);
 			}
 
 			// If the output data contains closing </body> and </html> tags
@@ -752,6 +749,24 @@ class EE_Output {
 	public function remove_unparsed_variables($remove_unparsed_vars)
 	{
 		$this->remove_unparsed_variables = $remove_unparsed_vars;
+	}
+
+	/**
+	 * Display a generic Unauthorized Access error to the user, or
+	 * sends an error response back for Ajax requests
+	 *
+	 * @return void throws an error and halts processing
+	 */
+	public function throwAuthError()
+	{
+		if (AJAX_REQUEST)
+		{
+			$this->send_ajax_response(lang('not_authorized'), TRUE);
+		}
+		else
+		{
+			$this->show_user_error('submission', [lang('not_authorized')]);
+		}
 	}
 }
 // END CLASS

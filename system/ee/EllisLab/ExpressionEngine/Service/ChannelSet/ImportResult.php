@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -160,6 +160,7 @@ class ImportResult {
 		$recoverable = array(
 			'ee:Channel' => array('channel_title', 'channel_name'),
 			'ee:ChannelFieldGroup' => array('group_name'),
+			'ee:CategoryGroup' => array('group_name'),
 			'ee:ChannelField' => array('field_name'),
 			'ee:UploadDestination' => array('name', 'server_path', 'url')
 		);

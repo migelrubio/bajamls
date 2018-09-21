@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -432,6 +432,12 @@ class Categories extends AbstractCategoriesController {
 
 		$parent_id_options = [0 => lang('none')] + $cat_group->buildCategoryOptionsTree();
 
+		$disabled_choices = [];
+		if ( ! $category->isNew())
+		{
+			$disabled_choices = array_merge([$category->getId()], $category->getAllChildren()->getIds());
+		}
+
 		$vars['sections'][0][] = array(
 			'title' => 'parent_category',
 			'fields' => array(
@@ -439,7 +445,7 @@ class Categories extends AbstractCategoriesController {
 					'type' => 'radio',
 					'value' => $category->parent_id === NULL ? 0 : $category->parent_id,
 					'choices' => $parent_id_options,
-					'disabled_choices' => $category->isNew() ? [] : [$category->getId()],
+					'disabled_choices' => $disabled_choices,
 					'no_results' => [
 						'text' => sprintf(lang('no_found'), lang('categories'))
 					]
@@ -497,6 +503,10 @@ class Categories extends AbstractCategoriesController {
 				{
 					ee()->functions->redirect(ee('CP/URL')->make('categories/create/'.$cat_group->group_id));
 				}
+				elseif (ee()->input->post('submit') == 'save_and_close')
+				{
+					ee()->functions->redirect(ee('CP/URL')->make('categories/group/'.$cat_group->group_id));
+				}
 				else
 				{
 					ee()->functions->redirect(ee('CP/URL')->make('categories/edit/'.$cat_group->group_id.'/'.$category->getId()));
@@ -508,8 +518,8 @@ class Categories extends AbstractCategoriesController {
 				ee()->form_validation->_error_array = $result->renderErrors();
 				ee('CP/Alert')->makeInline('shared-form')
 					->asIssue()
-					->withTitle(lang('category_group_not_'.$alert_key))
-					->addToBody(lang('category_group_not_'.$alert_key.'_desc'))
+					->withTitle(lang('category_not_'.$alert_key))
+					->addToBody(lang('category_not_'.$alert_key.'_desc'))
 					->now();
 			}
 		}
@@ -527,6 +537,13 @@ class Categories extends AbstractCategoriesController {
 				'type' => 'submit',
 				'value' => 'save_and_new',
 				'text' => 'save_and_new',
+				'working' => 'btn_saving'
+			],
+			[
+				'name' => 'submit',
+				'type' => 'submit',
+				'value' => 'save_and_close',
+				'text' => 'save_and_close',
 				'working' => 'btn_saving'
 			]
 		];
@@ -584,6 +601,7 @@ class Categories extends AbstractCategoriesController {
 			->filter('cat_id', 'IN', $selected['cat_group_id_'.$group_id])
 			->all();
 		$field->setData(implode('|', $selected_cats->pluck('cat_id')));
+		$field->setItem('editing', TRUE);
 
 		return $field->getForm();
 	}

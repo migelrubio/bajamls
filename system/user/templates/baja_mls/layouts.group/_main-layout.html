@@ -35,13 +35,19 @@
 		<!--<link href="{theme_folder_url}site/default/asset/style/default.min.css" title="common-styles" rel="stylesheet">-->
 		<!-- <link href="{theme_folder_url}site/default/asset/style/debug.min.css" title="common-styles" rel="stylesheet"> -->
 		<!-- Custom Styles -->
-        <link href="{theme_folder_url}asset/css/custom.css" title="common-styles" rel="stylesheet">
+        <link href="asset/css/custom.css" title="common-styles" rel="stylesheet">
 		{layout:styles}
 	</head>
 	<?php
 		require($_SERVER['DOCUMENT_ROOT'] . "/app/config.php");
+		//get browser's language
 		$language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-		echo $language;
+		//overwrite language with url segment
+		switch ({last_segment}){
+			case "esp": $language = "es"; break;
+			case "espanol": $language = "es"; break;
+			case "eng": $language = "en"; break;
+		}
 		switch ($language){
 			case "es":
 				include($_SERVER['DOCUMENT_ROOT'] . "/lang/es.php");
@@ -56,10 +62,15 @@
 			<nav class="nav-center">
 				<div class="nav-wrapper center-align">
 					<div class="brand-logo center hide-on-large-only">
-						<a href="/"><img src="/images/logo2.png" height="50px"></a>
+						<a href="/"><img src="/images/logo2.png"></a>
 					</div>
 					<a href="#" data-target="mobile-demo" data-activates="mobile-demo" class="sidenav-trigger button-collapse"><i class="material-icons">menu</i></a>
-					<ul class="hide-on-med-and-down center">
+					<ul class="hide-on-med-and-down">
+						<li>
+							<a href="/" class="logo">
+								<img src="/images/logo2.png">
+							</a>
+						</li>
 						<li>
 							<a href="#">
 								<?=$lang["agents"]?>
@@ -75,11 +86,7 @@
 							<?=$lang["buyers"]."/".$lang["sellers"]?>
 							</a>
 						</li>
-						<li>
-							<a href="/" class="logo">
-								<img src="/images/logo2.png" height="50px">
-							</a>
-						</li>
+						
 						<li>
 							<a class="dropdown-trigger" href="#" data-target="locations-dropdown">
 								<?=$lang["communities"]?>
@@ -95,7 +102,13 @@
 								<?=$lang["contact"]?>
 							</a>
 						</li>
-						<!--li><a href="#">Español</a></li-->
+						<li>
+							<?php if ($language == 'en') { ?>
+							<a href="<?=$_SERVER['REQUEST_URI'] . '/esp' ?>">Español</a>
+							<?php } else { ?>
+							<a href="">English</a>
+							<?php } ?>
+						</li>
 					</ul>	
 					
 				</div>
@@ -163,7 +176,7 @@
 
         
 		{layout:contents}
-
+		
 		<footer>
 			<div class="footer-top"></div>
 			<div class="footer-bottom">

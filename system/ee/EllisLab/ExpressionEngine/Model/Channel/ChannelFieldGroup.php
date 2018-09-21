@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -41,7 +41,7 @@ class ChannelFieldGroup extends Model {
 	);
 
 	protected static $_validation_rules = array(
-		'group_name' => 'required|unique[site_id]|validateName'
+		'group_name' => 'required|unique|validateName'
 	);
 
 	protected static $_events = array(

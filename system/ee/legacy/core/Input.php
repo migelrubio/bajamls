@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -104,6 +104,10 @@ class EE_Input {
 	 */
 	public function set_cookie($name = '', $value = '', $expire = '', $domain = '', $path = '/', $prefix = '')
 	{
+		if ( ! $this->cookieIsAllowed($name))
+		{
+			return;
+		}
 
 		$data = array(
 			'name' => $name,
@@ -234,6 +238,47 @@ class EE_Input {
 	}
 
 	/**
+	 * Is the cookie allowed?
+	 *
+	 * @param  string $name Name of the cookie
+	 * @return boolean Whether or not it's allowed to be set
+	 */
+	private function cookieIsAllowed($name)
+	{
+		// only worry about it if consent is required
+		if (bool_config_item('require_cookie_consent') !== TRUE)
+		{
+			return TRUE;
+		}
+
+		// Need a local ref for PHP < 7, can't do ee('CookieRegistry')::CONST
+		$cookie_reg = ee('CookieRegistry');
+
+		// unregistered cookies, pass, but log
+		if ( ! $cookie_reg->isRegistered($name))
+		{
+			ee()->load->library('logger');
+			ee()->logger->developer('A cookie ('.htmlentities($name).') is being sent without being properly registered, and does not meet cookie compliance policies. Register this cookie appropriately in your addon.setup.php file.', TRUE, 604800);
+			return TRUE;
+		}
+
+		switch ($cookie_reg->getType($name))
+		{
+			case $cookie_reg::NECESSARY:
+				return TRUE;
+			case $cookie_reg::FUNCTIONALITY:
+				return ee('Consent')->hasGranted('ee:cookies_functionality');
+			case $cookie_reg::PERFORMANCE:
+				return ee('Consent')->hasGranted('ee:cookies_performance');
+			case $cookie_reg::TARGETING:
+				return ee('Consent')->hasGranted('ee:cookies_targeting');
+		}
+
+		// something bad happened
+		return FALSE;
+	}
+
+	/**
 	 * Fetch from array
 	 *
 	 * This is a helper function to retrieve values from global arrays
@@ -331,6 +376,11 @@ class EE_Input {
 		if ($this->ip_address !== FALSE)
 		{
 			return $this->ip_address;
+		}
+
+		if (REQ == 'CLI')
+		{
+			return '0.0.0.0';
 		}
 
 		$proxy_ips = config_item('proxy_ips');
@@ -607,8 +657,8 @@ class EE_Input {
 	function cookie($index = '', $xss_clean = FALSE)
 	{
 		$prefix = ( ! ee()->config->item('cookie_prefix')) ? 'exp_' : ee()->config->item('cookie_prefix').'_';
-
-		return ( ! isset($_COOKIE[$prefix.$index]) ) ? FALSE : stripslashes($_COOKIE[$prefix.$index]);
+		$cookie = $this->_fetch_from_array($_COOKIE, $prefix.$index, $xss_clean);
+		return ($cookie) ? stripslashes($cookie) : FALSE;
 	}
 
 	/**

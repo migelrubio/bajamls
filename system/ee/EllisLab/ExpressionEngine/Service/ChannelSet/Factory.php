@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -72,5 +72,26 @@ class Factory {
 		$set->setSiteId($this->site_id);
 
 		return $set;
+	}
+
+	/**
+	 * Removes extracted channel set directories that have been sitting around
+	 * for more than one day
+	 */
+	public function garbageCollect()
+	{
+		$path = PATH_CACHE.'cset/';
+
+		if (ee('Filesystem')->exists($path))
+		{
+			foreach (ee('Filesystem')->getDirectoryContents($path) as $cset)
+			{
+				if (ee('Filesystem')->isDir($cset) &&
+					ee('Filesystem')->mtime($cset) < time() - 86400)
+				{
+					ee('Filesystem')->deleteDir($cset);
+				}
+			}
+		}
 	}
 }

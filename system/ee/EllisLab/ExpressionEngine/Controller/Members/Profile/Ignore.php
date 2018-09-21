@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -58,7 +58,8 @@ class Ignore extends Profile {
 			->with('MemberGroup')
 			->order($sort_map[$sort_col], $sort_dir);
 
-		if ( ! empty($search = ee()->input->post('search')))
+		$search = ee()->input->post('search');
+		if ( ! empty($search))
 		{
 			// $members = $members->filter('screen_name', 'LIKE', "%$search%");
 			$members = $members->search('screen_name', $search);

@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -62,7 +62,8 @@ class Insert extends Update {
 		{
 			$values[$primary_key] = $this->insert_id;
 		}
-		elseif ($object->getName() != 'ee:MemberGroup') // TODO MSM this needs to change with msm
+		elseif ($object->getName() != 'ee:Member' &&
+			$object->getName() != 'ee:MemberGroup') // TODO MSM this needs to change with msm
 		{
 			unset($values[$primary_key]);
 		}

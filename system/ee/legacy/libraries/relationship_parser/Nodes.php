@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -110,7 +110,7 @@ class ParseNode extends EE_TreeNode {
 		{
 			$ids[$parent] = array_merge($ids[$parent], $child);
 		}
-		else
+		elseif ( ! in_array($child, $ids[$parent]))
 		{
 			$ids[$parent][] = $child;
 		}

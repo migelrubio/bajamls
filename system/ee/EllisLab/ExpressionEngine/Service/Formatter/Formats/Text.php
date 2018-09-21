@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -494,6 +494,35 @@ class Text extends Formatter {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Normalize URLs so they can be used in HTML
+	 *
+	 * @return object $this
+	 */
+	public function url()
+	{
+		if (empty($this->content))
+		{
+			return $this;
+		}
+
+		// strings that contain only a protocol? wipe 'em. Shortest valid URL in the world is 11 chars: http://g.cn
+		if (strncasecmp($this->content, 'http', 4) === 0 && strlen($this->content) <= 8)
+		{
+			$this->content = '';
+			return $this;
+		}
+
+		$url = parse_url($this->content);
+
+		if ( ! $url OR ! isset($url['scheme']))
+		{
+			$this->content = 'http://'.$this->content;
+		}
+
+		return $this->content;
 	}
 
 	/**

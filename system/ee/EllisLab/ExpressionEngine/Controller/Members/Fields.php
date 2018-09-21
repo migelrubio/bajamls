@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -276,9 +276,19 @@ class Fields extends Members\Members {
 
 	private function form($field_id = NULL)
 	{
+		$fieldtype_choices = [
+			'date'     => lang('date'),
+			'text'     => lang('text_input'),
+			'textarea' => lang('textarea'),
+			'select'   => lang('select_dropdown'),
+			'url'      => lang('url'),
+		];
+
 		if ($field_id)
 		{
 			$field = ee('Model')->get('MemberField', array($field_id))->first();
+
+			$fieldtype_choices = array_intersect_key($fieldtype_choices, $field->getCompatibleFieldtypes());
 
 			ee()->view->save_btn_text = sprintf(lang('btn_save'), lang('field'));
 			ee()->view->cp_page_title = lang('edit_member_field');
@@ -317,18 +327,13 @@ class Fields extends Members\Members {
 					'fields' => array(
 						'm_field_type' => array(
 							'type' => 'dropdown',
-							'choices' => array(
-								'date'     => lang('date'),
-								'text'     => lang('text_input'),
-								'textarea' => lang('textarea'),
-								'select'   => lang('select_dropdown'),
-								'url'   => lang('url'),
-							),
+							'choices' => $fieldtype_choices,
 							'group_toggle' => array(
 								'date' => 'date',
 								'text' => 'text',
 								'textarea' => 'textarea',
-								'select' => 'select'
+								'select' => 'select',
+								'url' => 'url'
 							),
 							'value' => $field->field_type
 						)
@@ -374,6 +379,16 @@ class Fields extends Members\Members {
 							'value' => $field->field_required
 						)
 					)
+				),
+				array(
+					'title' => 'exclude_from_anonymization',
+					'desc' => 'exclude_from_anonymization_desc',
+					'fields' => array(
+						'm_field_exclude_from_anon' => array(
+							'type' => 'yes_no',
+							'value' => $field->field_exclude_from_anon
+						)
+					)
 				)
 			),
 			'visibility' => array(
@@ -403,7 +418,7 @@ class Fields extends Members\Members {
 		$vars['sections'] = array_merge($vars['sections'], $field->getSettingsForm());
 
 		// These are currently the only fieldtypes we allow; get their settings forms
-		foreach (array('date', 'text', 'textarea', 'select') as $fieldtype)
+		foreach (array_keys($fieldtype_choices) as $fieldtype)
 		{
 			if ($field->field_type != $fieldtype)
 			{

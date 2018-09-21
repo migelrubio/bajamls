@@ -20,9 +20,13 @@ $lang = array(
 
 'banned_email' => 'The email address you submitted is banned',
 
+'btn_confirm_and_anonymize' => 'Confirm, and Anonymize',
+
+'btn_confirm_and_anonymize_working' => 'Anonymizing...',
+
 'btn_confirm_and_decline' => 'Confirm, and Decline',
 
-'btn_confirm_and_decline_working' => 'Declineing...',
+'btn_confirm_and_decline_working' => 'Declining...',
 
 'can_attach_in_private_messages' => 'Allow attachments',
 
@@ -136,11 +140,15 @@ $lang = array(
 
 'heir_to_members_entries' => 'Some of these members have entries assigned to their accounts. What would you like to do with those entries?',
 
+'heir_required' => 'You must select an account to reassign entries to.',
+
 'include_in_authorlist' => 'Author lists',
 
 'include_in_memberlist' => 'Member lists',
 
 'index' => 'Main Index Page',
+
+'invalid_password' => 'The password you entered was invalid.',
 
 'invalid_path' => 'The path you submitted is not valid.',
 
@@ -190,11 +198,19 @@ $lang = array(
 
 'member_activation_resent_success_desc' => 'An activation email was sent to <b>%s</b>.',
 
+'member_anonymize_problem' => 'There was a problem anonymizing the member.',
+
+'member_anonymize_success' => 'Member Anonymized',
+
+'member_anonymize_success_desc' => 'The member has been anonymized.',
+
 'member_approve' => 'Approve Member',
 
 'member_approved_success' => 'Member Approved',
 
 'member_approved_success_desc' => 'The member <b>%s</b> has been approved.',
+
+'member_assignment_none' => 'None, members in this group will be deleted',
 
 'member_assignment_warning' => 'Members are currently assigned to some of these groups. What member group should they be re-assigned to?',
 
@@ -211,6 +227,8 @@ $lang = array(
 'member_declined_success_desc' => 'The member <b>%s</b> has been declined.',
 
 'member_delete_success' => 'Member Deleted',
+
+'member_delete_problem' => 'There was a problem deleting members.',
 
 'member_deleted' => 'Member Deleted',
 
@@ -237,6 +255,8 @@ $lang = array(
 'member_groups' => 'Member Groups',
 
 'member_groups_removed_desc' => 'Member Group has been deleted successfully.',
+
+'member_groups_remove_problem' => 'There was a problem deleting member groups.',
 
 'member_has_cp_access' => 'Can access the control panel',
 
@@ -386,6 +406,12 @@ $lang = array(
 
 'your_password_desc' => 'You <b>must</b> enter your password in order to create a member that has control panel access.',
 
+'your_password_anonymize_members_desc' => 'You <b>must</b> enter your password in order to anomymize members.',
+
+'your_password_delete_members_desc' => 'You <b>must</b> enter your password in order to delete members.',
+
+'your_password_delete_member_groups_desc' => 'You <b>must</b> enter your password in order to delete member groups.',
+
 
 /* Member banning */
 'ban_message' => 'This site is currently unavailable',
@@ -424,7 +450,7 @@ $lang = array(
 
 
 /* Member group settings */
-'access_privilege_caution' => 'Any setting marked with <span title="excercise caution"></span> should only be granted to people you trust implicitly.',
+'access_privilege_caution' => 'Any setting marked with <span class="icon--caution" title="exercise caution"></span> should only be granted to people you trust implicitly.',
 
 'access_privilege_warning' => '<b>Warning</b>: Please be very careful with the access privileges you grant.',
 
@@ -504,7 +530,7 @@ $lang = array(
 
 'can_admin_channels' => 'Access channel manager',
 
-'can_admin_channels_desc' => 'When enabled, users can access the channel manager.',
+'can_admin_channels_desc' => 'When enabled, users can access the channel manager, and optionally channel fields, categories, and statuses.',
 
 'can_admin_design' => 'Global template settings',
 
@@ -720,6 +746,10 @@ $lang = array(
 
 'can_access_addon_settings' => 'Add-ons',
 
+'can_manage_consents' => 'Consent Requests',
+
+'can_manage_consents_desc' => 'When enabled members of this group will be able to manage consent requests.',
+
 'can_access_security_settings' => 'Security &amp; Privacy',
 
 'can_access_security_settings_desc' => 'When enabled members of this group will be able to access the system security and privacy settings.',
@@ -732,9 +762,9 @@ $lang = array(
 
 'can_not_delete_only_member' => 'You cannot delete the only member in the database',
 
-'can_send_bulletins' => 'Access bulletins',
+'can_send_bulletins' => 'Send bulletins',
 
-'can_send_bulletins_desc' => 'When enabled, users assigned to this group may send and receive bulletins.',
+'can_send_bulletins_desc' => 'When enabled, users assigned to this group may send bulletins.',
 
 'cannot_change_your_group' => 'Super Admins cannot change their member group assignment. Please have another Super Admin reassign you.',
 
@@ -835,6 +865,10 @@ $lang = array(
 'email_deleted' => 'Email Message(s) Deleted',
 
 'email_title' => 'Email Title',
+
+'exclude_from_anonymization' => 'Exclude from Anonymization Actions?',
+
+'exclude_from_anonymization_desc' => 'When enabled, this field will be unaffected by anonymization (right to forget) actions.', // TODO: docs link
 
 'field_created' => 'Field Created',
 

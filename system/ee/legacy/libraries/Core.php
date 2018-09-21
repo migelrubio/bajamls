@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -67,10 +67,10 @@ class EE_Core {
 		define('PATH_DICT',   SYSPATH . 'user/config/');
 
 		// application constants
-		define('IS_CORE',		TRUE);
+		define('IS_CORE',		FALSE);
 		define('APP_NAME',		'ExpressionEngine'.(IS_CORE ? ' Core' : ''));
-		define('APP_BUILD',		'20171222');
-		define('APP_VER',		'4.0.4');
+		define('APP_BUILD',		'20180817');
+		define('APP_VER',		'4.3.4');
 		define('APP_VER_ID',	'');
 		define('SLASH',			'&#47;');
 		define('LD',			'{');
@@ -227,6 +227,11 @@ class EE_Core {
 
 		define('PATH_MBR_THEMES', PATH_THEMES.'member/');
 		define('PATH_CP_GBL_IMG', URL_THEMES_GLOBAL_ASSET.'img/');
+
+		define('PATH_THEME_TEMPLATES', SYSPATH . 'ee/templates/_themes/');
+		define('PATH_THIRD_THEME_TEMPLATES', SYSPATH . 'user/templates/_themes/');
+
+
 		unset($theme_path);
 
 		// Load the very, very base classes
@@ -353,30 +358,38 @@ class EE_Core {
 		// Load up any Snippets
 		if (REQ == 'ACTION' OR REQ == 'PAGE')
 		{
-			$fresh = ee('Model')->make('Snippet')->loadAll();
+			$this->loadSnippets();
+		}
+	}
 
-			if ($fresh->count() > 0)
+	/**
+	 * Load Snippets into config's _global_vars
+	 */
+	public function loadSnippets()
+	{
+		$fresh = ee('Model')->make('Snippet')->loadAll();
+
+		if ($fresh->count() > 0)
+		{
+			$snippets = $fresh->getDictionary('snippet_name', 'snippet_contents');
+
+			// Thanks to @litzinger for the code suggestion to parse
+			// global vars in snippets...here we go.
+
+			$var_keys = array();
+
+			foreach (ee()->config->_global_vars as $k => $v)
 			{
-				$snippets = $fresh->getDictionary('snippet_name', 'snippet_contents');
-
-				// Thanks to @litzinger for the code suggestion to parse
-				// global vars in snippets...here we go.
-
-				$var_keys = array();
-
-				foreach (ee()->config->_global_vars as $k => $v)
-				{
-					$var_keys[] = LD.$k.RD;
-				}
-
-				$snippets = str_replace($var_keys, ee()->config->_global_vars, $snippets);
-
-				ee()->config->_global_vars = ee()->config->_global_vars + $snippets;
-
-				unset($snippets);
-				unset($fresh);
-				unset($var_keys);
+				$var_keys[] = LD.$k.RD;
 			}
+
+			$snippets = str_replace($var_keys, ee()->config->_global_vars, $snippets);
+
+			ee()->config->_global_vars = ee()->config->_global_vars + $snippets;
+
+			unset($snippets);
+			unset($fresh);
+			unset($var_keys);
 		}
 	}
 
@@ -449,7 +462,7 @@ class EE_Core {
 			// has their session Timed out and they are requesting a page?
 			// Grab the URL, base64_encode it and send them to the login screen.
 			$safe_refresh = ee()->cp->get_safe_refresh();
-			$return_url = ($safe_refresh == 'C=homepage') ? '' : AMP.'return='.base64_encode($safe_refresh);
+			$return_url = ($safe_refresh == 'C=homepage') ? '' : AMP.'return='.ee('Encrypt')->encode($safe_refresh);
 
 			ee()->functions->redirect(BASE.AMP.'C=login'.$return_url);
 		}

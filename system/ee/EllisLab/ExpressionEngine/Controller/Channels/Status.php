@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -178,7 +178,7 @@ class Status extends AbstractChannelsController {
 					->asWarning()
 					->addToBody(lang('category_permissions_warning'))
 					->addToBody(
-						sprintf(lang('category_permissions_warning2'), '<span title="excercise caution"></span>'),
+						sprintf(lang('category_permissions_warning2'), '<span class="icon--caution" title="exercise caution"></span>'),
 						'caution'
 					)
 					->cannotClose()
@@ -249,7 +249,7 @@ class Status extends AbstractChannelsController {
 				'value' => 'save_and_new',
 				'text' => 'save_and_new',
 				'working' => 'btn_saving'
-			]
+					]
 		];
 
 		return ee('View')->make('ee:_shared/form')->render($vars);

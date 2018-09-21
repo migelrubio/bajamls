@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -129,6 +129,14 @@ trait ModifiableTrait {
 	public function replace_spellout($data, $params = array(), $tagdata = FALSE)
 	{
 		return (string) ee('Format')->make('Number', $data)->spellout($params);
+	}
+
+	/**
+	 * :url modifier
+	 */
+	public function replace_url($data, $params = array(), $tagdata = FALSE)
+	{
+		return (string) ee('Format')->make('Text', $data)->url();
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -19,6 +19,7 @@ class Grid_lib {
 	public $content_type;
 	public $entry_id;
 	public $fluid_field_data_id = 0;
+	public $in_modal_context = FALSE;
 
 	protected $_fieldtypes = [];
 	protected $_validated = [];
@@ -54,11 +55,23 @@ class Grid_lib {
 		{
 			$rows = isset($data['rows']) ? $data['rows'] : $data;
 		}
-		// Otherwise, we're editing or creating a new entry
+		// Editing an existing entry
+		elseif ($this->entry_id)
+		{
+			$rows = ee()->grid_model->get_entry_rows(
+				$this->entry_id,
+				$this->field_id,
+				$this->content_type,
+				[],
+				FALSE,
+				$this->fluid_field_data_id
+			);
+			$rows = (isset($rows[$this->entry_id])) ? $rows[$this->entry_id] : array();
+		}
+		// Creating a new entry
 		else
 		{
-			$rows = ee()->grid_model->get_entry_rows($this->entry_id, $this->field_id, $this->content_type, array(), FALSE, $this->fluid_field_data_id);
-			$rows = (isset($rows[$this->entry_id])) ? $rows[$this->entry_id] : array();
+			$rows = [];
 		}
 
 		$column_headings = array();
@@ -197,7 +210,8 @@ class Grid_lib {
 			$this->field_id,
 			$this->entry_id,
 			$this->content_type,
-			$this->fluid_field_data_id
+			$this->fluid_field_data_id,
+			$this->in_modal_context
 		);
 
 		$row_data = (isset($row['col_id_'.$column['col_id']]))
@@ -280,7 +294,7 @@ class Grid_lib {
 			return $this->_validated[$this->field_id.','.$this->fluid_field_data_id];
 		}
 
-		$this->_searchable_data[$this->field_id] = [];
+		$this->_searchable_data[$this->field_id.','.$this->fluid_field_data_id] = [];
 
 		// Process the posted data and cache
 		$this->_validated[$this->field_id.','.$this->fluid_field_data_id] = $this->_process_field_data('validate', $data);
@@ -551,7 +565,7 @@ class Grid_lib {
 					// we're validating
 					if (ee()->input->is_ajax_request() && $field = ee()->input->post('ee_fv_field'))
 					{
-						if ($field == 'field_id_'.$this->field_id.'[rows]['.$row_id.']['.$col_id.']'
+						if (strpos($field, 'field_id_'.$this->field_id.'[rows]['.$row_id.']['.$col_id.']') === 0
 							|| strpos($field, '[field_id_'.$this->field_id.'][rows]['.$row_id.']['.$col_id.']') !== FALSE)
 						{
 							return $error;
@@ -570,7 +584,7 @@ class Grid_lib {
 					// Add to searchable array if searchable
 					if ($column['col_search'] == 'y')
 					{
-						$this->_searchable_data[$this->field_id][] = $value;
+						$this->_searchable_data[$this->field_id.','.$this->fluid_field_data_id][] = $value;
 					}
 				}
 				// 'save' method
@@ -606,9 +620,9 @@ class Grid_lib {
 	 */
 	public function getSearchableData()
 	{
-		if (isset($this->_searchable_data[$this->field_id]))
+		if (isset($this->_searchable_data[$this->field_id.','.$this->fluid_field_data_id]))
 		{
-			return $this->_searchable_data[$this->field_id];
+			return $this->_searchable_data[$this->field_id.','.$this->fluid_field_data_id];
 		}
 
 		return [];
@@ -770,6 +784,12 @@ class Grid_lib {
 			$count++;
 		}
 
+		// Channel content type only searchable at the moment
+		if ($this->content_type == 'channel')
+		{
+			ee()->grid_model->update_grid_search(array($settings['field_id']));
+		}
+
 		// Delete columns that were not including in new field settings
 		if ( ! $new_field)
 		{
@@ -842,6 +862,8 @@ class Grid_lib {
 			$field_name = (empty($column)) ? 'new_0' : 'col_id_'.$column['col_id'];
 		}
 
+		$is_new = (strpos($field_name, 'new_') !== FALSE);
+
 		if (empty($column))
 		{
 			$column = array(
@@ -865,7 +887,7 @@ class Grid_lib {
 					'fields' => [
 						'grid[cols]['.$field_name.'][col_type]' => [
 							'type' => 'dropdown',
-							'choices' => $this->getGridFieldtypeDropdownForColumn($column['col_type']),
+							'choices' => $this->getGridFieldtypeDropdownForColumn($is_new ? NULL : $column['col_type']),
 							'value' => $column['col_type'] ?: 'text',
 							'no_results' => ['text' => sprintf(lang('no_found'), lang('fieldtypes'))]
 						]

@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -227,6 +227,16 @@ class FilterFactory {
 	protected function createDefaultKeyword()
 	{
 		return new Filter\Keyword();
+	}
+
+	/**
+	 * This will instantiate and return a default Search In filter
+	 *
+	 * @return Filter\SearchIn a SearchIn Filter object
+	 */
+	protected function createDefaultSearchIn($options, $default = NULL)
+	{
+		return new Filter\SearchIn($options, $default);
 	}
 
 	/**

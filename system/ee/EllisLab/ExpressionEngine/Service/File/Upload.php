@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -469,7 +469,12 @@ class Upload {
 				{
 					$src  = $fd->getAbsolutePath() . $file->file_name;
 					$dest = $fd->getAbsolutePath() . $original->file_name;
-					ee('Filesystem')->copy($src, $dest);
+
+					// non-image files will not have manipulations
+					if (ee('Filesystem')->exists($src))
+					{
+						ee('Filesystem')->copy($src, $dest);
+					}
 				}
 
 				$file->delete();

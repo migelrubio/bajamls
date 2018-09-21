@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -121,7 +121,8 @@ class MemberGroup extends StructureModel {
 		'can_access_translate'           => 'boolString',
 		'can_access_import'	             => 'boolString',
 		'can_access_sql_manager'         => 'boolString',
-		'can_admin_channels'             => 'boolString'
+		'can_admin_channels'             => 'boolString',
+		'can_manage_consents'            => 'boolString',
 	);
 
 
@@ -316,6 +317,7 @@ class MemberGroup extends StructureModel {
 	protected $can_access_import;
 	protected $can_access_sql_manager;
 	protected $can_admin_channels;
+	protected $can_manage_consents;
 
 	/**
 	 * Ensure group ID is set for new records

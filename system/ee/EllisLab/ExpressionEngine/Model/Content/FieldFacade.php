@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -271,7 +271,7 @@ class FieldFacade {
 		return $this->api->apply('get_field_status', array($field_value));
 	}
 
-	public function replaceTag($tagdata, $params = array(), $modifier = '')
+	public function replaceTag($tagdata, $params = array(), $modifier = '', $full_modifier = '')
 	{
 		$ft = $this->getNativeField();
 
@@ -300,6 +300,7 @@ class FieldFacade {
 		// Go to catchall and include modifier
 		elseif (method_exists($ft, 'replace_tag_catchall') AND $modifier !== '')
 		{
+			$modifier = $full_modifier ?: $modifier;
 			$output = $this->api->apply('replace_tag_catchall', array($data, $params, $tagdata, $modifier));
 		}
 

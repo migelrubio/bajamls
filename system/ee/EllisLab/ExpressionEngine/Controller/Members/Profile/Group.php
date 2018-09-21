@@ -3,7 +3,7 @@
  * ExpressionEngine (https://expressionengine.com)
  *
  * @link      https://expressionengine.com/
- * @copyright Copyright (c) 2003-2017, EllisLab, Inc. (https://ellislab.com)
+ * @copyright Copyright (c) 2003-2018, EllisLab, Inc. (https://ellislab.com)
  * @license   https://expressionengine.com/license
  */
 
@@ -59,7 +59,7 @@ class Group extends Profile {
 					->asWarning()
 					->addToBody(lang('access_privilege_warning'))
 					->addToBody(
-						sprintf(lang('access_privilege_caution'), '<span title="excercise caution"></span>'),
+						sprintf(lang('access_privilege_caution'), '<span class="icon--caution" title="exercise caution"></span>'),
 						'caution'
 					)
 					->cannotClose()
