@@ -1,6 +1,32 @@
 <?php
     error_reporting( E_ALL ); //debug
     //echo "config: ".$_SERVER['DOCUMENT_ROOT'];
+
+    //get browser's language
+    $language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    //overwrite language with url segment
+    $def_lang = true;
+    $last_segment = "{last_segment}";
+    echo $last_segment == "esp";
+    if ($last_segment == "esp"){
+        $language = "es";
+        $def_lang = false;
+    }
+    /*switch ("{last_segment}") {
+        case "esp": $language = "es"; break;
+        case "espanol": $language = "es"; break;
+        case "eng": $language = "en"; break;
+        case "english": $language = "en"; break;
+    }*/
+
+    switch ($language){
+        case "es":
+            include($_SERVER['DOCUMENT_ROOT'] . "/lang/es.php");
+            break;
+        default:
+            include($_SERVER['DOCUMENT_ROOT'] . "/lang/en.php");
+            break;
+    }
     
     $cities = [
         "la-paz" => [

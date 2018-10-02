@@ -27,6 +27,7 @@ if ($_SERVER['HTTP_HOST'] == "bajamls.local") {
 			'port'     => ''
 		),
 	);
+	$config['base_path'] = "/var/www/bajamls/";
 } else {
 	$config['database'] = array(
 		'expressionengine' => array(

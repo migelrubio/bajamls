@@ -24,7 +24,6 @@
     $api->SetDeveloperMode(false);
     $auth = $api->Authenticate();
     if ($auth === false) api_error_thrown($api);
-    //$cities = ["la-paz","la-ventana","todos-santos","cabo-san-lucas","san-jose-del-cabo","east-cape"];
     $city = isset($cities["{segment_1}"]) ? "{segment_1}" : "all";
     $city_name = isset($cities[$city]["name"]) ? $cities[$city]["name"] : "";
     $property_type = "all";
@@ -91,10 +90,10 @@
             <?php }
         }*/
         /*poner solo las imagenes que estan en la carpeta raiz para todas las ciudades y sin el nombre de la ciudad (temporalmente) */
-        $images = array_slice(scandir($_SERVER['DOCUMENT_ROOT']."/images/layout/slider/hd/"),2); //array_slice to get rid of . and .. elements
+        $images = array_slice(scandir($_SERVER['DOCUMENT_ROOT']."/images/layout/slider/min/"),2); //array_slice to get rid of . and .. elements
             shuffle($images);
             foreach($images as $image) { ?>
-                <a class="carousel-item" href="#" style="background-image: url('/images/layout/slider/hd/<?=$image?>')"></a>
+                <a class="carousel-item" href="#" style="background-image: url('/images/layout/slider/min/<?=$image?>')"></a>
             <?php }
     ?>
 </div><!--home-carousel-->

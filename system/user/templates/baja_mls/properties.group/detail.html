@@ -1,0 +1,260 @@
+{layout='layouts/_main-layout'}
+
+<?php
+    error_reporting( E_ALL ); //debug
+    //require_once($_SERVER['DOCUMENT_ROOT'] . "/flexmls/Core.php");
+    require_once($_SERVER['DOCUMENT_ROOT'] . "/flexmls/flexmlsAPI.php");
+    require_once($_SERVER['DOCUMENT_ROOT'] . "/lang/lang.php");
+    $language = isset($_GET['lang']) ? trim($_GET['lang']) : 'en';
+    $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
+    $hostName = $_SERVER['HTTP_HOST'];
+    $base_url = $protocol.$hostName;
+    $search_results = "";
+    //var_dump($_SERVER);
+    if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $base_url.'/listing') > -1 ) { $search_results =  $_SERVER['HTTP_REFERER']; }
+    //$api = new SparkAPI_APIAuth("cab_westerlund_key_1", "5lCZrVg8d4uYSviaNIN4t"); //Core.php
+    $api = new flexmlsAPI("cab_westerlund_key_1", "5lCZrVg8d4uYSviaNIN4t"); //flexmlsAPI.php
+    $api->SetApplicationName("Diamante-MLS-Search/1.0");
+    $api->SetDeveloperMode(false);
+    $auth = $api->Authenticate();
+    if ($auth === false) api_error_thrown($api);
+
+    $id = "{segment_3}";
+    //echo $id;
+    $parameters = array("_expand" => 'CustomFields,Photos');
+    $listing = $api->GetListings(array("_filter" => "ListingId Eq '" . $id . "'" , "_expand" => 'CustomFields,Photos', "_limit" => "1", "_pagination" => true));
+    //$listing = $api->GetListing($id,$parameters);
+
+    //var_dump($listing);
+    if ($listing != null){
+        $standard = $listing[0]['StandardFields'];
+        $custom = $listing[0]['CustomFields'][0];
+
+        $main_photo = '';
+        $main_photo_name = '';
+        $photos = $standard['Photos'];
+
+        foreach ($photos as $item) {
+            if ($item['Primary'] == 1) {
+                $main_photo = $item['Uri1600'];
+                $main_photo_name = $item['Name'];
+            }
+        }
+
+        $general_desc = null;
+
+        $main = null;
+        $details = null;
+
+        $stai = $standard["StreetAdditionalInfo"];
+        $stnu = $standard["StreetNumber"];
+        $stna = $standard["StreetName"];
+        //echo $stai . $stnu . $stna;
+        $street = $stai != '********' ? $stai . ' ' : '';
+        $street .= $stnu != '********' ? $stnu . ' ' : '';
+        $street .= $stna != '********' ? $stna . ' ' : '';
+
+        $exchange_rate = 1;
+
+        if($language == 'es') {
+            $xml = simplexml_load_file("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml")->Cube[0]->Cube[0];
+            $usd = 0;
+            $mxn = 0;
+            foreach ($xml->Cube as $item) {
+                if((string)$item['currency'] === 'USD')
+                    $usd = (real)$item['rate'];
+                    
+                if((string)$item['currency'] === 'MXN')
+                    $mxn = (real)$item['rate'];
+            }
+    
+            $exchange_rate = $mxn/$usd;
+        }
+
+        if($language == 'es'){
+            $price = "$" . number_format($standard["ListPrice"] * $exchange_rate,2) . " MXN";
+        }
+        else{
+            $price = "$" . number_format($standard["ListPrice"],2) . " USD";
+        }
+
+        $description = '';
+
+        if($language == 'es'){
+            error_reporting(0);
+            $json = file_get_contents('https://www.googleapis.com/language/translate/v2?key=AIzaSyA2XBI0Wlol8wIHwZ28nGvtpk01VBgdDAQ&q=' . urlencode($standard['PublicRemarks']) . '&source=en&target=es');
+            $json = json_decode($json, true);
+            $translations = $json['data']['translations'];
+            
+            foreach($translations as $translation) {
+                $description .= "{$translation['translatedText']}";
+            }
+            
+            if(trim($description) == '')
+                $description = preg_replace('/[^a-zA-Z0-9\s\.,()-]/','', $standard['PublicRemarks']);
+
+            echo '<em style="font-size:10px;">&bull; Los precios en pesos son calculados en base al tipo de cambio al momento de la consulta; el precio puede variar.<br />&bull; La información mostrada se tradujo de forma automatizada por lo tanto puede ser imprecisa.</em><br /><br />';
+        }
+        else{
+            $description = preg_replace('/[^a-zA-Z0-9\s\.,()-]/','', $standard['PublicRemarks']);
+        }
+
+        $map_lat = (str_replace("*", "", number_format($standard['Latitude'],6,'.','')) == "") ? 24.161754 : $standard['Latitude'];
+        $map_lon = (str_replace("*", "", number_format($standard['Longitude'],6,'.','')) == "") ? -110.318013 : $standard['Longitude'];
+
+    } //if listing != null
+?>
+
+{layout:set name="styles"}
+    <style>
+        .hero{
+            background-image: url('<?=$main_photo?>');
+        }
+
+        #map_container {
+            width:100%;
+            height:500px;
+        }
+    </style>
+{/layout:set}
+
+
+<?php if($listing == null) { ?>
+    <main>
+        <div class="container">
+            <h4 class="center">Sorry, property not found</h4>
+
+            <p class="center">
+                <?php if ($search_results != "") {?>
+                    <a href="<?=$search_results?>" class="waves-effect waves-light btn"><i class="material-icons left">chevron_left</i> Back to search results  </a>
+                <?php } else { ?>
+                    <a href="/listing" class="waves-effect waves-light btn"><i class="material-icons left">chevron_left</i> Back to listing </a>
+                <?php } ?>
+            </p>
+        </div>
+    </main>
+
+<?php } else { ?> 
+
+    <div class="hero">
+
+    </div>
+
+    <main>
+
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m10">
+
+                    <div id="description" class="section scrollspy">
+                        <h4><?= $id ?> / <?= $street ?></h4>
+                        <h5><?= $price ?></h5>  
+
+                        <p class="flow-text"><?= $description ?> </p>
+                    </div>
+
+                    <div id="features" class="section scrollspy">
+                        <h5>Features</h5>
+                    </div>
+
+                    <div id="gallery" class="section scrollspy">
+                        <h5>Gallery</h5>
+
+                        <div class="carousel carousel-slider">
+                            
+                                <?php foreach ($standard['Photos'] as $photo) { ?>
+                                    <a class="carousel-item" href="#<?=$photo['Id']?>">
+                                        <img src="<?=$photo['Uri800']?>">
+                                    </a>
+                                <?php } ?>
+                            
+                        </div>
+                    </div>
+
+                    <div id="map" class="section scrollspy">
+                        <h5>Map</h5>
+                        <div id="map_container"></div>
+                    </div>
+
+                    
+                </div>
+                <div class="col hide-on-small-only m2">
+                    <div class="pushpin">            
+                        <h6>
+                            <?php if ($search_results != "") {?>
+                                <a href="<?=$search_results?>"><i class="material-icons left">chevron_left</i> Back to search results  </a>
+                            <?php } else { ?>
+                                <a href="/listing"><i class="material-icons left">chevron_left</i> Back to listing </a>
+                            <?php } ?>
+                        </h6>
+                        <ul class="section table-of-contents">
+                            <li><a href="#description">Description</a></li>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#gallery">Gallery</a></li>
+                            <li><a href="#map">Map</a></li>
+                        </ul>
+                    </div>
+                    <?php //var_dump($listing) ?>
+                </div>
+            </div>
+        </div>
+
+    </main>
+<?php } ?>
+
+
+{layout:set name="scripts"}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnEhkVDYEAhWmyleuk7rvrVD6XcJ72q5A&callback=loadMap" async defer></script>
+    <script>
+        function loadMap(){
+            var latlng = new google.maps.LatLng(<?php echo $map_lat . ',' . $map_lon; ?>);
+            var opt = {
+                zoom: 15,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.HYBRID
+            }
+            var map = new google.maps.Map(document.getElementById("map_container"), opt);
+
+            var info = '<p class="map_info"><div class="thumb"><img src="<?php echo $photos[0]['UriThumb']; ?>" /></div>'+
+                '<b> <?php echo $price; ?></b><br />'+
+                '<?php echo $street; ?><br /><?php echo $standard['City']; ?><br />'+
+                '<i class=""><?php echo $standard['ListingId']; ?></i></p>';
+
+            var infowindow = new google.maps.InfoWindow({
+                content: info
+            });
+
+            var marker = new google.maps.Marker({
+                position: latlng,
+                animation: google.maps.Animation.DROP,
+                map: map,
+                title:"<?php echo $street; ?>"
+            });
+            
+            infowindow.open(map,marker);
+            
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.open(map,marker);
+            });
+        }
+
+        $( document ).ready(function(){
+            //$('.slider').slider();
+            $('.carousel.carousel-slider').carousel({
+                fullWidth: true,
+                indicators: true
+            });
+            $('.scrollspy').scrollSpy();
+            $('.pushpin').pushpin();
+            /*$('#fullscreen-btn').click(function(){
+                var elem = document.querySelector('.slider');
+                var instance = M.Slider.getInstance(elem);
+                instance.destroy(); 
+                //$('.slider').slider('destroy');
+                $('.slider').addClass('fullscreen');
+                $('.slider').slider();
+            });*/
+        });
+        
+    </script>
+{/layout:set}

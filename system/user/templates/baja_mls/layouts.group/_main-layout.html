@@ -35,27 +35,11 @@
 		<!--<link href="{theme_folder_url}site/default/asset/style/default.min.css" title="common-styles" rel="stylesheet">-->
 		<!-- <link href="{theme_folder_url}site/default/asset/style/debug.min.css" title="common-styles" rel="stylesheet"> -->
 		<!-- Custom Styles -->
-        <link href="asset/css/custom.css" title="common-styles" rel="stylesheet">
+        <link href="{site_url}asset/css/custom.css" title="common-styles" rel="stylesheet">
 		{layout:styles}
 	</head>
 	<?php
 		require($_SERVER['DOCUMENT_ROOT'] . "/app/config.php");
-		//get browser's language
-		$language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-		//overwrite language with url segment
-		switch ({last_segment}){
-			case "esp": $language = "es"; break;
-			case "espanol": $language = "es"; break;
-			case "eng": $language = "en"; break;
-		}
-		switch ($language){
-			case "es":
-				include($_SERVER['DOCUMENT_ROOT'] . "/lang/es.php");
-				break;
-			default:
-				include($_SERVER['DOCUMENT_ROOT'] . "/lang/en.php");
-				break;
-		}
 	?>
     <body class="blue-grey lighten-5">
 		<div class="navbar-fixed">
@@ -77,7 +61,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="/listing">
+							<a href="/properties">
 								<?=$lang["properties"]?>
 							</a>
 						</li>
@@ -98,17 +82,19 @@
 							</a>
 						</li>
 						<li>
-							<a href="#">
+							<a href="/contact">
 								<?=$lang["contact"]?>
 							</a>
 						</li>
-						<li>
-							<?php if ($language == 'en') { ?>
+						<!--li>
+							<?php 
+							echo $def_lang;
+							if ($language == 'en') { ?>
 							<a href="<?=$_SERVER['REQUEST_URI'] . '/esp' ?>">Español</a>
 							<?php } else { ?>
 							<a href="">English</a>
 							<?php } ?>
-						</li>
+						</li-->
 					</ul>	
 					
 				</div>

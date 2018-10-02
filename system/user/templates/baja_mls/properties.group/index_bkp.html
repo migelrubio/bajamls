@@ -1,0 +1,173 @@
+{layout='layouts/_main-layout'}
+
+<?php
+    $portal = isset($_GET['portal']) ? trim($_GET['portal']) : 0;
+    $mls_number = isset($_GET['mls_number']) ? trim($_GET['mls_number']) : '';
+    $city = isset($_GET['city']) ? trim($_GET['city']) : '';
+    $property_type = isset($_GET['property_type']) ? trim($_GET['property_type']) : '';
+    $list_price = isset($_GET['list_price']) ? trim($_GET['list_price']) : '';
+    $development = isset($_GET['development']) ? trim($_GET['development']) : '';
+    $language = isset($_GET['lang']) ? trim($_GET['lang']) : 'en';
+    $exchange_rate = 1;
+
+    if($language == 'es') {
+        $xml = simplexml_load_file("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml")->Cube[0]->Cube[0];
+        $usd = 0;
+        $mxn = 0;
+        foreach ($xml->Cube as $item) {
+            if((string)$item['currency'] === 'USD')
+                $usd = (real)$item['rate'];
+                
+            if((string)$item['currency'] === 'MXN')
+                $mxn = (real)$item['rate'];
+        }
+
+        $exchange_rate = $mxn/$usd;
+    }
+
+    //*** English ***
+    $lang['en']['mls_number'] = 'MLS number';
+    $lang['en']['city'] = 'City';
+    $lang['en']['property_type'] = 'Property type';
+    $lang['en']['price'] = 'Price';
+    $lang['en']['any'] = 'Any';
+    $lang['en']['submit'] = 'Submit';
+    $lang['en']['cabo_corridor'] = 'Cabo Corridor';
+    $lang['en']['san_jose_corridor'] = 'San Jose Corridor';
+    $lang['en']['east_cape'] = 'East Cape';
+    $lang['en']['pacific_side'] = 'Pacific Side';
+    $lang['en']['condos'] = 'Condos';
+    $lang['en']['houses'] = 'Houses';
+    $lang['en']['townhouses'] = 'Townhouses';
+    $lang['en']['land'] = 'Land';
+    $lang['en']['commercial'] = 'Commercial';
+    $lang['en']['business'] = 'Business';
+    $lang['en']['fractional'] = 'Fractional';
+    $lang['en']['multifamily'] = 'MultiFamily';
+    $lang['en']['under'] = 'Under';
+    $lang['en']['over'] = 'Over';
+    $lang['en']['results'] = 'Results';
+    $lang['en']['email_the_agent'] = 'Email The Agent';
+    $lang['en']['login'] = 'Login';
+    $lang['en']['property_consultation'] = 'Property Consultation';
+    $lang['en']['details'] = 'Details';
+    $lang['en']['photos'] = 'Photos';
+    $lang['en']['map'] = 'Map';
+    $lang['en']['yes'] = 'Yes';
+    $lang['en']['no'] = 'No';
+    $lang['en']['developments'] = 'Developments';
+    //*** Spanish ***
+    $lang['es']['mls_number'] = 'N&uacute;mero MLS';
+    $lang['es']['city'] = 'Ciudad';
+    $lang['es']['property_type'] = 'Tipo de propiedad';
+    $lang['es']['price'] = 'Precio';
+    $lang['es']['any'] = 'Cualquiera';
+    $lang['es']['submit'] = 'Enviar';
+    $lang['es']['cabo_corridor'] = 'Corredor - San Lucas';
+    $lang['es']['san_jose_corridor'] = 'Corredor - San Jose';
+    $lang['es']['east_cape'] = 'Cabo del Este';
+    $lang['es']['pacific_side'] = 'Pac&iacute;fico';
+    $lang['es']['condos'] = 'Condominios';
+    $lang['es']['houses'] = 'Casas';
+    $lang['es']['townhouses'] = 'Residencias';
+    $lang['es']['land'] = 'Terrenos';
+    $lang['es']['commercial'] = 'Comercial';
+    $lang['es']['business'] = 'Negocio';
+    $lang['es']['fractional'] = 'Fraccionamiento';
+    $lang['es']['multifamily'] = 'Multi-Familiar';
+    $lang['es']['under'] = 'Menos de';
+    $lang['es']['over'] = 'Mas de';
+    $lang['es']['results'] = 'Resultados';
+    $lang['es']['email_the_agent'] = 'Enviar Email al Agente';
+    $lang['es']['login'] = 'Acceder';
+    $lang['es']['property_consultation'] = 'Consulta de Propiedad';
+    $lang['es']['details'] = 'Detalles';
+    $lang['es']['photos'] = 'Fotos';
+    $lang['es']['map'] = 'Mapa';
+    $lang['es']['yes'] = 'Si';
+    $lang['es']['no'] = 'No';
+    $lang['es']['developments'] = 'Desarrollos';
+
+    require_once($_SERVER['DOCUMENT_ROOT'] . "/flexmls/flexmlsAPI.php");
+    $api = new flexmlsAPI("cab_westerlund_key_1", "5lCZrVg8d4uYSviaNIN4t");
+    $api->SetApplicationName("Diamante-MLS-Search/1.0");
+    $api->SetDeveloperMode(false);
+    $auth = $api->Authenticate();
+    if ($auth === false) api_error_thrown($api);
+
+    $parameters = null;
+    $listings = null;
+    $mls_number = $_GET['mls_number'];
+    $city = urldecode($_GET['city']);
+    $property_type = $_GET['property_type'];
+    $list_price = $_GET['list_price'];
+    $page = isset($_GET['page']) ? trim($_GET['page']) : 1;
+    $featured = isset($_GET['featured']) ? $_GET['featured'] : 0;
+    $development = isset($_GET['development']) ? $_GET['development'] : '';
+
+    if($mls_number != '') {
+        $parameters = array("_filter" => "ListingId Eq '$mls_number'", "_expand" => 'PrimaryPhoto', "_limit" => "1", "_pagination" => true);
+        $listings = $api->GetListings($parameters);
+    }
+    else {
+        $filter = '';
+        $p_type = ($property_type != "") ? "PropertyType Eq '$property_type'": "Not PropertyType Eq 'H'";
+        $filter .= ($filter != '') ? " And $p_type" : "$p_type" ;
+        $filter .= ($city != '') ? (($filter != '') ? " And $city" : "$city" ) : '';
+        $filter .= ($list_price != '') ? (($filter != '') ? " And ListPrice $list_price" : "ListPrice $list_price" ) : '';
+        if ($development == 'Terrazas' || $development == 'Torres Cantera' || $development == 'Vista Coral' || $development == 'Paseo del Malecon' || $development == 'Puerto Ilusion' || $development == 'Querencia' || $development == 'Palmilla') {
+            $filter .= ($filter != '') ? " And StreetAdditionalInfo Eq '$development*'" : "StreetAdditionalInfo Eq '$development*'";
+        }
+        else {
+            $filter .= ($development != '') ? (($filter != '') ? " And SubdivisionName Eq '$development'" : "SubdivisionName Eq '$development'" ) : '';
+        }
+        $filter = stripslashes($filter);
+
+        if($featured == 1) {
+            $parameters = array("_filter" => $filter, "_expand" => 'PrimaryPhoto', "_limit" => 25, "_pagination" => true, "_page" => $page, "_orderby" => 'ListPrice');
+            $listings = $api->GetMyListings($parameters);
+        }
+        else {
+            $parameters = array("_filter" => $filter, "_expand" => 'PrimaryPhoto', "_limit" => 25, "_pagination" => true, "_page" => $page, "_orderby" => 'ListPrice');
+            $listings = $api->GetListings($parameters);
+        }
+    }
+    $listings[count($listings)] = array("LastCount" => $api->last_count, "PageSize" => $api->page_size, "TotalPages" => $api->total_pages, "CurrentPage" => $api->current_page);
+    echo json_encode($listings);
+?>
+
+<div class="container-fluid content" style="margin-top:100px;">
+    <input id="submit" type="button" value="<?php echo $lang[$language]['submit']; ?>" />
+    <div class="results">
+        <div id="listings"></div>
+    </div>
+</div>
+
+{layout:set name="scripts"}
+    <script src="{theme_folder_url}site/default/asset/js/mls.js" ></script>
+    <script>
+        var portal = <?php echo $portal; ?>;
+        var language = '<?php echo $language; ?>';
+        var exchange_rate = <?php echo $exchange_rate; ?>;
+        var selectedListing = '';
+        
+        function autoLoad(){
+            $('#mls_number').val('<?php echo $mls_number; ?>');
+            $('#city').val('<?php echo $city; ?>');
+            $('#property_type').val('<?php echo $property_type; ?>');
+            $('#list_price').val('<?php echo $list_price; ?>');
+            $('#development').val('<?php echo $development; ?>');
+            $('#submit').click();
+        }
+        
+        $(function(){
+            $('#property_type').change(function(){
+                if ($(this).val() != 'E') {
+                    $("#list_price option[value='Le 200000.0']").remove();
+                } else if ($("#list_price option[value='Le 200000.0']").length == 0) {
+                    $('#list_price option:first').after('<option value="Le 200000.0"><?php echo $lang[$language]['under']; ?> 200,000 USD</option>');
+                }
+            });
+        });
+    </script>
+{/layout:set}
