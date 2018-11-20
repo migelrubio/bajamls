@@ -1,0 +1,48 @@
+{layout='layouts/_content-layout'}
+
+<main>
+  <div class="container">
+    <h2>Agents</h2>
+    {exp:channel:entries channel="agents" orderby="title" sort="asc"}
+      {if (count+1)%2==0}
+        <div class="row">
+      {/if}
+        <div class="col l6 s12">
+          <div class="card">
+            <div class="row">
+              <div class="col m5 s12">
+                <div class="agents-img" style="background-image:url('{avatar}')"></div>
+              </div>
+              <div class="col m7 s12">
+                <div class="card-stacked">
+                  <div class="card-content right-align">
+                    <h5 class="">{title}</h5>
+                  </div>
+                  <div class="card-action right-align">
+                    <div class="hide-on-med-and-up">
+                      <a href="tel:{mobile}" class="btn-floating blue darken-4">
+                        <i class="material-icons">local_phone</i> <span class="hide-on-small-only">{mobile}</span>
+                      </a>
+                      <a href="mailto:{agent_email}" class="btn-floating blue darken-4">
+                        <i class="material-icons">email</i>
+                      </a>
+                    </div>
+                    <div class="hide-on-small-only">
+                      <p style="overflow-wrap: break-word;">
+                        {mobile} <br>
+                        {agent_email}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      {if count%2==0}
+        </div>
+      {/if}
+    {/exp:channel:entries}
+  </div>
+</main>

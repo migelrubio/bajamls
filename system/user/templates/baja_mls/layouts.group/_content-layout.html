@@ -43,7 +43,7 @@
 	?>
     <body class="blue-grey lighten-5">
 		<div class="navbar-fixed">
-			<nav class="nav-center" id="home-nav">
+			<nav class="nav-center">
 				<div class="nav-wrapper center-align">
 					<div class="brand-logo center hide-on-large-only">
 						<a href="/"><img src="/images/logo2.png"></a>
@@ -156,15 +156,20 @@
 			</li>
 		</ul>
 		
-		
-
+    {if !(segment_1 == 'properties' && segment_2 == 'detail') }
+      <?php
+        $images = array_slice(scandir($_SERVER['DOCUMENT_ROOT']."/images/layout/slider/min/"),2);
+        shuffle($images);
+      ?>
+      <div class="hero" style="background-image: url('/images/layout/slider/min/<?=$images[0]?>')"></div>
+    {/if}
 
 
         
 		{layout:contents}
-
-    <div class="spacer-100"></div>
 		
+    <div class="spacer-100"></div>
+
 		<footer>
 			<div class="footer-top"></div>
 			<div class="footer-bottom">
@@ -201,16 +206,6 @@
 				});
 				$('.materialboxed').materialbox();*/
 				$('.slider').slider();
-			});
-			$( document ).on("scroll", function(){
-				//changes navbar alpha on scroll
-				var scroll = $( document ).scrollTop();
-				$("nav#home-nav, .subnav ul").css("background-color","rgba(255,255,255,"+(scroll + 80) / 100 +")");
-				if (scroll < 240) {
-					$("nav#home-nav ul").css("margin", 30 - (scroll * .1) + "px 0");
-					$("nav#home-nav .subnav").css("padding-top", $(".nav-center").height());
-					//$(".logo img").height(100 - (scroll/6));
-				}
 			});
 			function boundDropdowns() {
 				$(".dropdown-trigger").hover(function(){

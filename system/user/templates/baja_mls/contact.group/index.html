@@ -1,57 +1,68 @@
-{layout='layouts/_main-layout'}
-
-<?php
-    $images = array_slice(scandir($_SERVER['DOCUMENT_ROOT']."/images/layout/slider/min/"),2);
-    shuffle($images);
-?>
-<div class="hero" style="background-image: url('/images/layout/slider/min/<?=$images[0]?>')"></div>
+{layout='layouts/_content-layout'}
 
 <main>
-    <div class="container">
-        <h2>Contact Us</h2>
+  <div class="container">
+    <h2>Contact Us</h2>
+    <p>
+      Please feel free to contact us for more detailed information, while Diamante Associates is based in the Southern Baja with our main offices in La Paz and La Ventana, we do provide US based phone numbers forwarded to us for easier communications with our clients.
+    </p>
+    <div class="row">
+      <div class="col s12 m6">
+        <h4>United States</h4>
+        <p>Cell: 1-360-836-6058<br>
+        Fax: 1-888-650-4092</p>
+        
+        <h4>La Paz</h4>
+        <p>Tel: (612)-122-8363</p>
 
-        <p>
-            Please feel free to contact us for more detailed information, while Diamante Associates is based in the Southern Baja with our main offices in La Paz and La Ventana, we do provide US based phone numbers forwarded to us for easier communications with our clients.
-        </p>
+        <h4>La Ventana</h4>
+        <p>Tel: (612)-114-0374</p>
 
-        {exp:email:contact_form user_recipients="no" recipients="miguelantonio.rubio@gmail.com" charset="utf-8"}
+        <h4>Cabo San Lucas</h4>
+        <p>Tel : 624-143-0372</p>
+
+      </div>
+      <div class="col s12 m6">
+        
+        {exp:formgrab:form name="contact_form" title="Contact Form"}       
         <div class="row">
-                <div class="col s12 m6">
-                        <p>
-                                <label for="from">Name:</label><br />
-                                <input type="text" id="name" name="name" size="40" maxlength="35" value="" />
-                        </p>
-                </div>
-                <div class="col s12 m6">
-                        <p>
-                                <label for="from">Phone:</label><br />
-                                <input type="text" id="phone" name="phone" size="40" maxlength="35" value="" />
-                        </p>
-                </div>
+          <div class="col s12 m6">
+            <p>
+              <label for="from">Name:</label><br />
+              <input type="text" id="from" name="from" size="40" maxlength="35" value="" />
+            </p>
+          </div>
+          <div class="col s12 m6">
+            <p>
+              <label for="phone">Phone:</label><br />
+              <input type="text" id="phone" name="phone" size="40" maxlength="35" value="" />
+            </p>
+          </div>
         </div>
         <div class="row">
-                <div class="col s12 m6">
-                        <p>
-                                <label for="from">Email:</label><br />
-                                <input type="text" id="from" name="from" size="40" maxlength="35" value="" />
-                        </p>
-                </div>
-                <div class="col s12 m6">
-                        <p>
-                                <label for="subject">Subject:</label><br />
-                                <input type="text" id="subject" name="subject" size="40" value="" />
-                        </p>
-                </div>
+          <div class="col s12 m6">
+            <p>
+              <label for="emial">Email:</label><br />
+              <input type="text" id="email" name="email" size="40" maxlength="35" value="" />
+            </p>
+          </div>
+          <div class="col s12 m6">
+            <p>
+              <label for="subject">Subject:</label><br />
+              <input type="text" id="subject" name="subject" size="40" value="" />
+            </p>
+          </div>
         </div>
 
         <p>
-                <label for="message">Message:</label><br />
-                <textarea id="message" name="message" rows="20" style="height:300px"> </textarea>
+          <label for="message">Message:</label><br />
+          <textarea id="message" name="message" rows="20" style="height:300px"> </textarea>
         </p>
         <p>
-                <input name="submit" class="btn" type='submit' value='Submit Form' />
+          <input name="submit" class="btn" type='submit' value='Submit Form' />
         </p>
-        {/exp:email:contact_form}
+        {/exp:formgrab:form}
+      </div>
     </div>
+  </div>
 </main>
-<div class="spacer-100"></div>

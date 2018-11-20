@@ -1,4 +1,4 @@
-{layout='layouts/_main-layout'}
+{layout='layouts/_content-layout'}
 
 {layout:set name="styles"}
     <style>
@@ -7,9 +7,6 @@
         }
         .search-car .card-content row {
             margin-bottom:0;
-        }
-        main {
-            margin-top: 150px;
         }
     </style>
 {/layout:set}
@@ -128,11 +125,11 @@
 
 <main>
     <div class="container">
-
+        <h2>MLS Search</h2>
         <div class="card search-card">
             <div class="card-content">
                 <div class="card-title">
-                    MLS Search
+                    
                 </div>
                 <div class="row">
                     <form class="col s12">
@@ -204,11 +201,13 @@
             </div>
             <div class="card-action right-align">
                 <div class="left">Total results: <?php echo $listings[sizeof($listings)-1]["LastCount"] ?></div>
-                <a id="searchBtn" class="btn waves-effect waves-light">Search
+                <a id="searchBtn" class="btn waves-effect waves-light indigo">Search
                     <i class="material-icons right">search</i>
                 </a>
             </div>
         </div>
+
+        <div class="spacer-75"></div>
 
         <ul class="pagination center-align">
             <?php if ($page > 1) { ?>
@@ -280,12 +279,13 @@
                         <!--a href="#" class="btn btn-primary">Button</a-->
                     </div>
                     <div class="card-action">
-                        <a href="<?php echo $base_url."/properties/detail/".$listing["StandardFields"]["ListingId"] ?>" class="btn halfway-fab waves-effect waves-light indigo right"><i class="material-icons">add</i></a>
+                        <a href="<?php echo $base_url."/properties/detail/".$listing["StandardFields"]["ListingId"] ?>" class="btn halfway-fab waves-effect waves-light indigo right"><i class="material-icons">visibility</i></a>
                         <p><?php echo $listing["StandardFields"]["ListingId"]?></p>
                     </div>
                     <div class="card-reveal activator">
                         <span class="card-title grey-text text-darken-4"><i class="material-icons right activator">close</i><?php echo $street ?></span>
                         <p><?php echo $listing["StandardFields"]["City"] ?></p>
+                        <p><?= $listing["StandardFields"]["PublicRemarks"] ?></p>
                     </div>
                 </div>
             </div>

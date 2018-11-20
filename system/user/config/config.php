@@ -14,6 +14,10 @@ $config['save_tmpl_files'] = 'y';
 $config['app_version'] = '4.3.4';
 $config['encryption_key'] = 'c27bcef640fb4b966395a187e2047b9f9b6af988';
 $config['session_crypt_key'] = '5ca17441703d75c334de01fe59b2b008d9712262';
+$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
+$hostName = $_SERVER['HTTP_HOST'];
+$base_url = $protocol.$hostName."/";
+$config['base_url'] = $base_url;
 if ($_SERVER['HTTP_HOST'] == "bajamls.local") {
 	$config['database'] = array(
 		'expressionengine' => array(
@@ -41,6 +45,7 @@ if ($_SERVER['HTTP_HOST'] == "bajamls.local") {
 			'port'     => ''
 		),
 	);
+	$config['base_path'] = "/home/diamante/public_html/";
 }
 
 // EOF

@@ -1,1 +1,10 @@
-{layout='layouts/_main-layout'}
+{layout='layouts/_content-layout'}
+
+<main>
+  <div class="container">
+    {exp:channel:entries channel="blog" limit="1" dynamic="yes"}
+      <h2>{title}</h2>
+      {blog_content}
+    {/exp:channel:entries}
+  </div>
+</main>

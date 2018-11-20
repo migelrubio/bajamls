@@ -1,10 +1,11 @@
-{layout='layouts/_main-layout'}
+{layout='layouts/_content-layout'}
 
 <?php
-    error_reporting( E_ALL ); //debug
+    //error_reporting( E_ALL ); //debug
     //require_once($_SERVER['DOCUMENT_ROOT'] . "/flexmls/Core.php");
     require_once($_SERVER['DOCUMENT_ROOT'] . "/flexmls/flexmlsAPI.php");
     require_once($_SERVER['DOCUMENT_ROOT'] . "/lang/lang.php");
+    require_once($_SERVER['DOCUMENT_ROOT'] . "/util/util.php");
     $language = isset($_GET['lang']) ? trim($_GET['lang']) : 'en';
     $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
     $hostName = $_SERVER['HTTP_HOST'];
@@ -99,6 +100,20 @@
             $description = preg_replace('/[^a-zA-Z0-9\s\.,()-]/','', $standard['PublicRemarks']);
         }
 
+        if($custom) {
+          if ($custom['Main']) {
+            $main = parse_data($custom['Main']);
+          }
+          if ($custom['Details']) {
+            $details = parse_details($custom['Details']);	
+            $tmp_arr = explode('|', $details);
+            foreach($tmp_arr as $item) {
+              $item .= '</p>';
+            }
+            $details = implode('<p class="left third">', $tmp_arr);
+          }
+        }
+
         $map_lat = (str_replace("*", "", number_format($standard['Latitude'],6,'.','')) == "") ? 24.161754 : $standard['Latitude'];
         $map_lon = (str_replace("*", "", number_format($standard['Longitude'],6,'.','')) == "") ? -110.318013 : $standard['Longitude'];
 
@@ -120,17 +135,24 @@
 
 
 <?php if($listing == null) { ?>
+    <?php
+      $images = array_slice(scandir($_SERVER['DOCUMENT_ROOT']."/images/layout/slider/min/"),2);
+      shuffle($images);
+    ?>
+    <div class="hero" style="background-image: url('/images/layout/slider/min/<?=$images[0]?>')"></div>
     <main>
         <div class="container">
-            <h4 class="center">Sorry, property not found</h4>
+            <div class="spacer-100"></div>
+            <h2 class="center">Sorry, property not found</h2>
 
             <p class="center">
                 <?php if ($search_results != "") {?>
                     <a href="<?=$search_results?>" class="waves-effect waves-light btn"><i class="material-icons left">chevron_left</i> Back to search results  </a>
                 <?php } else { ?>
-                    <a href="/listing" class="waves-effect waves-light btn"><i class="material-icons left">chevron_left</i> Back to listing </a>
+                    <a href="/properties" class="waves-effect waves-light btn"><i class="material-icons left">chevron_left</i> Back to listing </a>
                 <?php } ?>
             </p>
+            <div class="spacer-100"></div>
         </div>
     </main>
 
@@ -139,67 +161,151 @@
     <div class="hero">
 
     </div>
+    <main id="main" class="property-detail">
 
-    <main>
+    <div class="property-menu-wrapper pushpin" data-target="main">
+      <div class="container">
+        <div class="row">
+          <div class="col s2">
+            <div class="property-menu-item">
+              <?php if ($search_results != "") {?>
+                  <a href="<?=$search_results?>">
+                    <div>
+                      <i class="material-icons">chevron_left</i><br>Back to search results
+                    </div>
+                  </a>
+              <?php } else { ?>
+                  <a href="/properties">
+                    <div>
+                      <i class="material-icons">chevron_left</i><br>Back to listing
+                    </div>  
+                  </a>
+              <?php } ?>
+            </div><!--poperty-menu-item-->
+          </div><!--col-->
+          <div class="col s2">
+            <div class="property-menu-item">
+              <a class="active" href="#description">
+                <div>
+                  <i class="material-icons">home</i><br>Description
+                </div>
+              </a>
+            </div><!--poperty-menu-item-->
+          </div><!--col-->
+          <div class="col s2">
+            <div class="property-menu-item">
+              <a href="#gallery">
+                <div>
+                  <i class="material-icons">image</i><br>Gallery
+                </div>
+              </a>
+            </div><!--poperty-menu-item-->
+          </div><!--col-->
+          <div class="col s2">
+            <div class="property-menu-item">
+              <a href="#features">
+                <div>
+                  <i class="material-icons">hotel</i><br>Features
+                </div>
+              </a>
+            </div><!--poperty-menu-item-->
+          </div><!--col-->
+          <div class="col s2">
+            <div class="property-menu-item">
+              <a href="#map">
+                <div>
+                  <i class="material-icons">location_on</i><br>Map
+                </div>
+              </a>
+            </div><!--poperty-menu-item-->
+          </div><!--col-->
+          <div class="col s2">
+            <div class="property-menu-item">
+              <a href="#contact">
+                <div>
+                  <i class="material-icons">mail</i><br>Contact
+                </div>
+              </a>
+            </div><!--poperty-menu-item-->
+          </div><!--col-->
+        </div><!--row-->
+      </div><!--container-->
+    </div> <!--property-menu-wrapper-->
 
         <div class="container">
             <div class="row">
-                <div class="col s12 m10">
+                <div class="col s12 m12">
 
                     <div id="description" class="section scrollspy">
-                        <h4><?= $id ?> / <?= $street ?></h4>
-                        <h5><?= $price ?></h5>  
+                        <h2><?= $id ?> / <?= $street ?></h2>
+
+                        <h5><?= $price ?></h5>
 
                         <p class="flow-text"><?= $description ?> </p>
-                    </div>
-
-                    <div id="features" class="section scrollspy">
-                        <h5>Features</h5>
+                        <div class="spacer-50"></div>
                     </div>
 
                     <div id="gallery" class="section scrollspy">
-                        <h5>Gallery</h5>
+                        <h2>Gallery</h2>
 
-                        <div class="carousel carousel-slider">
-                            
-                                <?php foreach ($standard['Photos'] as $photo) { ?>
-                                    <a class="carousel-item" href="#<?=$photo['Id']?>">
-                                        <img src="<?=$photo['Uri800']?>">
-                                    </a>
-                                <?php } ?>
-                            
+                        <?php 
+                        $count = 1; 
+                        foreach ($standard['Photos'] as $photo) { 
+                          if (($count+2)%3 == 0) {
+                            echo "<div class='row'>";
+                          }
+                          echo "<div class='col s12 m4'><img class='responsive-img materialboxed' src=".$photo['Uri800']." data-caption=".$photo['Caption']."> </div>";
+                          if ($count%3 == 0 || $count == sizeof($standard['Photos'])) {
+                            echo "</div>";
+                          }
+                          $count++;
+                        } 
+                        ?>
+                      <div class="spacer-50"></div>
+                    </div>
+
+                    <div id="features" class="section scrollspy">
+                        <h2>Features</h2>
+
+                        <div class="spacer-50"></div>
+                        <div class="row">
+                          <div class="col s6 m3">
+                            <p class='feature-item'>
+                              <b>Total bedrooms</b><br><?= $standard["BedsTotal"] != '********' ? $standard["BedsTotal"] : 'N/A' ?>
+                            </p>
+                          </div>
+                          <div class="col s6 m3">
+                            <p class='feature-item'>
+                              <b>Bathrooms</b><br><?= $standard["BathsFull"] != '********' ? $standard["BedsTotal"] : 'N/A' ?>
+                            </p>
+                          </div>
+                          <div class="col s6 m3">
+                            <p class='feature-item'>
+                              <b>Half Baths</b><br><?= $standard["BathsHalf"] != '********' ? $standard["BedsTotal"] : 'N/A' ?>
+                            </p>
+                          </div>
+                        <?php if($main != null) { ?>	
+                        <?php echo $main;} ?>
+                        <?php if($details != null) { ?>
                         </div>
+                        <div class="clearfix"></div>
+                        <?php echo $details;} ?>
+                        <div class="spacer-50"></div>
+
                     </div>
 
                     <div id="map" class="section scrollspy">
-                        <h5>Map</h5>
+                        <h2>Map</h2>
                         <div id="map_container"></div>
                     </div>
 
                     
                 </div>
-                <div class="col hide-on-small-only m2">
-                    <div class="pushpin">            
-                        <h6>
-                            <?php if ($search_results != "") {?>
-                                <a href="<?=$search_results?>"><i class="material-icons left">chevron_left</i> Back to search results  </a>
-                            <?php } else { ?>
-                                <a href="/listing"><i class="material-icons left">chevron_left</i> Back to listing </a>
-                            <?php } ?>
-                        </h6>
-                        <ul class="section table-of-contents">
-                            <li><a href="#description">Description</a></li>
-                            <li><a href="#features">Features</a></li>
-                            <li><a href="#gallery">Gallery</a></li>
-                            <li><a href="#map">Map</a></li>
-                        </ul>
-                    </div>
-                    <?php //var_dump($listing) ?>
-                </div>
             </div>
         </div>
 
     </main>
+
 <?php } ?>
 
 
@@ -245,7 +351,18 @@
                 indicators: true
             });
             $('.scrollspy').scrollSpy();
-            $('.pushpin').pushpin();
+             $('.pushpin').each(function() {
+              var $this = $(this);
+              var $target = $('#' + $(this).attr('data-target'));
+              $this.pushpin({
+                top: $target.offset().top - $(".nav-center").height(),
+                bottom: $target.offset().top + $target.outerHeight() - $this.height()
+              });
+            });
+            $( document ).on("scroll", function(){
+              if ($(".property-menu-wrapper").hasClass("pinned"))
+                $(".property-menu-wrapper").css("top",$(".nav-center").height());
+            });
             /*$('#fullscreen-btn').click(function(){
                 var elem = document.querySelector('.slider');
                 var instance = M.Slider.getInstance(elem);

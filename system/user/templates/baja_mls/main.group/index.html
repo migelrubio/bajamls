@@ -182,10 +182,10 @@ if ($city_name != "") {
         <div class="col s12 m6 l3">
             <div class="card">
                 <div class="card-image">
-                    <a href="">
+                    <a href="{path=themes}/ee/site/default/asset/img/common/LaPazMexico-LandOfEnchantment.pdf" target="_blank">
                         <img src="/images/layout/cta1.jpg">
                         <div class="card-overlay"></div>
-                        <p class="card-title"><span class="t1">Find my</span><br><span class="t2">dream home</span></p>
+                        <p class="card-title"><span class="t1">Welcome to</span><br><span class="t2">la paz</span></p>
                     </a>
                 </div>
             </div>
@@ -344,7 +344,7 @@ if ($city_name != "") {
         $('.carousel.featured').carousel();
 
         $("#searchBtn").click(function(){
-            var redirect = "/listing";
+            var redirect = "/properties";
                 redirect += "/"+$("#city").val();
                 redirect += "/"+$("#property_type").val();
                 redirect += "/"+$("#list_price").val();
