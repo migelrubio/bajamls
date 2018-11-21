@@ -171,13 +171,15 @@
               <?php if ($search_results != "") {?>
                   <a href="<?=$search_results?>">
                     <div>
-                      <i class="material-icons">chevron_left</i><br>Back to search results
+                      <i class="material-icons">chevron_left</i>
+                      <span class="hide-on-small-only"><br>Back to search results</span>
                     </div>
                   </a>
               <?php } else { ?>
                   <a href="/properties">
                     <div>
-                      <i class="material-icons">chevron_left</i><br>Back to listing
+                      <i class="material-icons">chevron_left</i>
+                      <span class="hide-on-small-only"><br>Back to listing</span>
                     </div>  
                   </a>
               <?php } ?>
@@ -187,7 +189,8 @@
             <div class="property-menu-item">
               <a class="active" href="#description">
                 <div>
-                  <i class="material-icons">home</i><br>Description
+                  <i class="material-icons">home</i>
+                  <span class="hide-on-small-only"><br>Description</span>
                 </div>
               </a>
             </div><!--poperty-menu-item-->
@@ -196,7 +199,8 @@
             <div class="property-menu-item">
               <a href="#gallery">
                 <div>
-                  <i class="material-icons">image</i><br>Gallery
+                  <i class="material-icons">image</i>
+                  <span class="hide-on-small-only"><br>Gallery</span>
                 </div>
               </a>
             </div><!--poperty-menu-item-->
@@ -205,7 +209,8 @@
             <div class="property-menu-item">
               <a href="#features">
                 <div>
-                  <i class="material-icons">hotel</i><br>Features
+                  <i class="material-icons">hotel</i>
+                  <span class="hide-on-small-only"><br>Features</span>
                 </div>
               </a>
             </div><!--poperty-menu-item-->
@@ -214,7 +219,8 @@
             <div class="property-menu-item">
               <a href="#map">
                 <div>
-                  <i class="material-icons">location_on</i><br>Map
+                  <i class="material-icons">location_on</i>
+                  <span class="hide-on-small-only"><br>Map</span>
                 </div>
               </a>
             </div><!--poperty-menu-item-->
@@ -223,7 +229,8 @@
             <div class="property-menu-item">
               <a href="#contact">
                 <div>
-                  <i class="material-icons">mail</i><br>Contact
+                  <i class="material-icons">mail</i>
+                  <span class="hide-on-small-only"><br>Contact</span>
                 </div>
               </a>
             </div><!--poperty-menu-item-->
@@ -357,7 +364,7 @@
 
             var info = '<p class="map_info"><div class="thumb"><img src="<?php echo $photos[0]['UriThumb']; ?>" /></div>'+
                 '<b> <?php echo $price; ?></b><br />'+
-                '<?php echo $street; ?><br /><?php echo $standard['City']; ?><br />'+
+                "<?php echo $street; ?><br /><?php echo $standard['City']; ?><br />"+
                 '<i class=""><?php echo $standard['ListingId']; ?></i></p>';
 
             var infowindow = new google.maps.InfoWindow({
