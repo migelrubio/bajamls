@@ -273,3 +273,61 @@ hr {
 .clearfix {
   clear: both !important;
 }
+
+#gallery-modal {
+  width: 100% !important;
+  height: 80% !important;
+  max-height: 100% !important;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+#gallery-modal .modal-content {
+  /*background-color: transparent;*/
+  height: 100%;
+  padding: 0;
+}
+
+.gallery-carousel {
+  height: 100%;
+}
+
+.gallery-carousel .carousel-item {
+  width: unset;
+  height: unset;
+  max-width: 80%;
+  max-height: 100%;
+}
+
+.gallery-thumbs-item {
+  background-size: cover;
+  background-position: center;
+  float: left;
+}
+
+.gallery-thumbs-item.vertical {
+  width: 33%;
+  height: 500px;
+}
+
+.gallery-thumbs-item.horizontal {
+  width: 66%;
+  height: 250px;
+}
+
+.gallery-thumbs-item.square {
+  width: 33%;
+  height: 250px;
+}
+
+.gallery-thumbs-more {
+  height: 100%;
+  width: 100%;
+}
+
+.gallery-thumbs-more p {
+  width: 100%;
+  text-shadow: 5px 5px 5px rgba(0,0,0, .5);
+  color: #fafafa;
+  font-size: 3rem;
+}
