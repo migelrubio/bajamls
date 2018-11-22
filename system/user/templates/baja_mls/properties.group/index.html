@@ -15,6 +15,7 @@
     error_reporting( E_ALL ); //debug
     require_once($_SERVER['DOCUMENT_ROOT'] . "/flexmls/flexmlsAPI.php");
     require_once($_SERVER['DOCUMENT_ROOT'] . "/lang/lang.php");
+    require_once($_SERVER['DOCUMENT_ROOT'] . "/util/util.php");
     $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
     $hostName = $_SERVER['HTTP_HOST'];
     $base_url = $protocol.$hostName;
@@ -256,6 +257,7 @@
                     $street = $stai != '********' ? $stai . ' ' : '';
                     $street .= $stnu != '********' ? $stnu . ' ' : '';
                     $street .= $stna != '********' ? $stna . ' ' : '';
+                    $street = fix($street);
 
                     if (($count+2)%3 == 0) { ?> <div class="row mt-5 wow"> <?php } ?>
 
@@ -285,7 +287,7 @@
                     <div class="card-reveal activator">
                         <span class="card-title grey-text text-darken-4"><i class="material-icons right activator">close</i><?php echo $street ?></span>
                         <p><?php echo $listing["StandardFields"]["City"] ?></p>
-                        <p><?= $listing["StandardFields"]["PublicRemarks"] ?></p>
+                        <p><?= fix($listing["StandardFields"]["PublicRemarks"]) ?></p>
                     </div>
                 </div>
             </div>

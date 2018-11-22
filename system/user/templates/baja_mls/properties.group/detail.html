@@ -54,6 +54,7 @@
         $street = $stai != '********' ? $stai . ' ' : '';
         $street .= $stnu != '********' ? $stnu . ' ' : '';
         $street .= $stna != '********' ? $stna . ' ' : '';
+        $street = fix($street);
 
         $exchange_rate = 1;
 
@@ -92,13 +93,14 @@
             }
             
             if(trim($description) == '')
-                $description = preg_replace('/[^a-zA-Z0-9\s\.,()-]/','', $standard['PublicRemarks']);
+                $description = fix($standard['PublicRemarks']);
 
             echo '<em style="font-size:10px;">&bull; Los precios en pesos son calculados en base al tipo de cambio al momento de la consulta; el precio puede variar.<br />&bull; La información mostrada se tradujo de forma automatizada por lo tanto puede ser imprecisa.</em><br /><br />';
         }
         else{
-            $description = preg_replace('/[^a-zA-Z0-9\s\.,()-]/','', $standard['PublicRemarks']);
+            $description = fix($standard['PublicRemarks']);
         }
+        //$description = htmlentities($description);
 
         if($custom) {
           if ($custom['Main']) {
@@ -128,7 +130,7 @@
 
         #map_container {
             width:100%;
-            height:500px;
+            height:700px;
         }
     </style>
 {/layout:set}

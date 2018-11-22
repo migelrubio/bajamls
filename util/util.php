@@ -49,4 +49,10 @@
     }
     return $result;
   }
+
+  function fix($s){
+    $search = ["Ã","Ã","Ã¡","Ã©","Ã­","Ã³","Â´"];
+    $replace = ["Á","É","á","é","í","ó","'"];
+    return str_replace($search, $replace, $s);
+  }
 ?>
