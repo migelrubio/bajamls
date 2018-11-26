@@ -1,3 +1,7 @@
+.hidden {
+  display: none;
+}
+
 h4 {
   font-size: 1.5rem !important;
 }
@@ -268,6 +272,7 @@ hr {
 
 .feature-item {
   font-size: 1.35rem;
+  margin-bottom: 20px !important;
 }
 
 .clearfix {
@@ -299,6 +304,11 @@ hr {
   max-height: 100%;
 }
 
+.gallery-carousel .carousel-item img {
+  max-height: 100%;
+  max-width: 100%;
+}
+
 .gallery-thumbs-item {
   background-size: cover;
   background-position: center;
@@ -328,6 +338,6 @@ hr {
 .gallery-thumbs-more p {
   width: 100%;
   text-shadow: 5px 5px 5px rgba(0,0,0, .5);
-  color: #fafafa;
+  color: #fafafa !important;
   font-size: 3rem;
 }

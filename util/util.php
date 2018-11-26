@@ -14,13 +14,13 @@
           global $det, $language;
           $tmp_key = strtolower(str_replace(' ', '_',trim($key)));
           $key_desc = ($det[$language][$tmp_key] != null) ? $det[$language][$tmp_key] : $key ;
-          if ( ($count+3)%4 == 0) {
+          /*if ( ($count+3)%4 == 0) {
             $result .= "<div class='row'>";
-          } 
+          } */
           $result .= "<div class='col s6 m3'><p class='feature-item'><b>$key_desc</b><br />" . (is_numeric($value) ? number_format($value, 2) : $value) . "</p></div>";
-          if ($count%4 == 0){
+          /*if ($count%4 == 0){
             $result .= "</div>";
-          }
+          }*/
         }
         else{
           $result .= "$key" . ($value == 1 ? '' : ": $value") . ", ";
