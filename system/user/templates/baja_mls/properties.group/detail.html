@@ -340,14 +340,14 @@
                     <div id="contact" class="section scrollspy card-content">
                           <h2>Contact</h2>
                           {exp:formgrab:form name="property_inquiry_form" title="Property Inquiry Form"}      
-                          <input id="mls_number" type="text" value="<?= $standard['ListingId'] ?>" class="hidden" /> 
+                          <input id="mls_number" name="mls_number" type="text" value="<?= $standard['ListingId'] ?>" class="hidden" /> 
 
                           <?php if($standard['ListOfficeId'] == '20100827185301358056000000') { ?>
-                            <input id="agent_name" type="text" value="<?php echo $standard['ListAgentFirstName'] . ' ' . $standard['ListAgentMiddleName'] . ' ' . $standard['ListAgentLastName']; ?>" class="hidden" />
-                            <input id="agent_email" type="text" value="<?php echo $standard['ListAgentEmail']; ?>" class="hidden" />
+                            <input id="agent_name" name="agent_name" type="text" value="<?php echo $standard['ListAgentFirstName'] . ' ' . $standard['ListAgentMiddleName'] . ' ' . $standard['ListAgentLastName']; ?>" class="hidden" />
+                            <input id="agent_email" name="agent_email" type="text" value="<?php echo $standard['ListAgentEmail']; ?>" class="hidden" />
                           <?php } else { ?>
-                            <input id="agent_name" type="text" value="" class="hidden" />
-                            <input id="agent_email" type="text" value="" class="hidden" />
+                            <input id="agent_name" name="agent_name" type="text" value="" class="hidden" />
+                            <input id="agent_email" name="agent_email" type="text" value="" class="hidden" />
                           <?php } ?>
 
                           <div class="row">
