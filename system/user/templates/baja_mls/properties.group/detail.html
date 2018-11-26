@@ -12,7 +12,7 @@
     $base_url = $protocol.$hostName;
     $search_results = "";
     //var_dump($_SERVER);
-    if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $base_url.'/listing') > -1 ) { $search_results =  $_SERVER['HTTP_REFERER']; }
+    if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $base_url.'/properties') > -1 ) { $search_results =  $_SERVER['HTTP_REFERER']; }
     //$api = new SparkAPI_APIAuth("cab_westerlund_key_1", "5lCZrVg8d4uYSviaNIN4t"); //Core.php
     $api = new flexmlsAPI("cab_westerlund_key_1", "5lCZrVg8d4uYSviaNIN4t"); //flexmlsAPI.php
     $api->SetApplicationName("Diamante-MLS-Search/1.0");

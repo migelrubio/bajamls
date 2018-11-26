@@ -1,0 +1,21 @@
+{layout='layouts/_content-layout'}
+
+<?php
+  $previous_page = $_SERVER['HTTP_REFERER'];
+?>  
+<main>
+    <div class="container">
+        <h2>Contact Us</h2>
+    </div>
+    <p class="center">Thank you for your inquiry. We'll get in contact with you shortly.</p>
+    <p>
+      <?php if ($previous_page != "") {?>
+          <a href="<?=$previous_page?>">
+            <div>
+              <i class="material-icons">chevron_left</i>
+              <span class="hide-on-small-only"><br>Back to previous page</span>
+            </div>
+          </a>
+      <?php } ?>
+    </p>
+</main>
