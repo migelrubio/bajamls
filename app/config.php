@@ -37,7 +37,7 @@
             "query" => "SubdivisionName Eq 'La Ventana' Or SubdivisionName Eq 'El Sargento'"],   
         "todos-santos" => [
             "name" => "Todos Santos",
-            "query" => "City Eq 'Pacific Or City Eq 'Pacific Side' Or City Eq 'Todos Santos'"],
+            "query" => "City Eq 'Pacific' Or City Eq 'Pacific Side' Or City Eq 'Todos Santos'"],
         "pescadero" => [
             "name" => "Pescadero",
             "query" => "City Eq 'Pescadero'"],
