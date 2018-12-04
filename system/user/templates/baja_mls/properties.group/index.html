@@ -264,10 +264,12 @@
             <div class="col m4 s12 wow fadeIn" data-wow-delay="0.2s">
             
                 <div class="card hoverable sticky-action">
+                  <a href="<?php echo $base_url.'/properties/detail/'.$listing['StandardFields']['ListingId'] ?>">
                     <div class="card-image">
                         <div class="view overlay hm-white-slight activator" style="height:250px; background-repeat: no-repeat; background-size: cover; background-position: center;background-image:url('<?php echo $thumb ?>');"></div>
                         <!--a href="<?php echo $base_url."/properties/detail/".$listing["StandardFields"]["ListingId"] ?>" class="btn-floating halfway-fab waves-effect waves-light indigo"><i class="material-icons">add</i></a-->
                     </div>
+                  </a>
                     <div class="card-content">
                         <!--Title-->
                         <h4 class="card-title activator right-align"><?php echo $price ?><i class="material-icons right">more_vert</i></h4>
@@ -281,7 +283,7 @@
                         <!--a href="#" class="btn btn-primary">Button</a-->
                     </div>
                     <div class="card-action">
-                        <a href="<?php echo $base_url."/properties/detail/".$listing["StandardFields"]["ListingId"] ?>" class="btn halfway-fab waves-effect waves-light indigo right"><i class="material-icons">visibility</i></a>
+                        <a href="<?php echo $base_url.'/properties/detail/'.$listing['StandardFields']['ListingId'] ?>" class="btn halfway-fab waves-effect waves-light indigo right">more info</a>
                         <p><?php echo $listing["StandardFields"]["ListingId"]?></p>
                     </div>
                     <div class="card-reveal activator">

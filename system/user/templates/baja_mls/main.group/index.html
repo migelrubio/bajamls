@@ -259,13 +259,13 @@ if ($city_name != "") {
           $street .= $stna != '********' ? $stna . ' ' : ''; ?>
 
           <div class="card hoverable sticky-action carousel-item">
-              <div class="card-image" style="height:100%; width:100%; background-repeat: no-repeat; background-size: cover; background-position: center;background-image:url('<?php echo $thumb ?>');">
-                  <a href="<?= $base_url.'/properties/detail/'.$listing['StandardFields']['ListingId'] ?>">
-                      <span class="card-title"><?= $price ?><br>
-                      <span class="truncate"><?= $street ?></span>
-                      </span>
-                  </a>
+            <a href="<?= $base_url.'/properties/detail/'.$listing['StandardFields']['ListingId'] ?>">
+              <div class="card-image" style="height:100%; width:100%; background-repeat: no-repeat; background-size: cover; background-position: center;background-image:url('<?php echo $thumb ?>');">     
+                <span class="card-title"><?= $price ?><br>
+                <span class="truncate"><?= $street ?></span>
+                </span>
               </div>
+            </a>
           </div>
       <?php } ?>
   </div>
