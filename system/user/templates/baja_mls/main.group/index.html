@@ -101,8 +101,8 @@
     <div class="card quickSearch">
         <div class="card-content">
             <div class="container">
-                <div class="card-title center">
-                    Quick Search <?php if ($city_name != "") echo " in ".$city_name; ?> 
+                <div class="card-title center" style="font-weight:400;">
+                  <?php if ($city_name != "") echo $city_name; else echo "Quick Search"?> 
                 </div>
                 <div class="row">
                     <form class="col s12">
