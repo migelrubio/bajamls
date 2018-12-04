@@ -261,13 +261,13 @@
 
                         <div class="gallery-thumbs">
 
-                          <a class="gallery-thumbs-item vertical modal-trigger hoverable" style="background-image: url('<?=$standard['Photos'][0]['Uri640']?>')" href="#gallery-modal" data-slide="0"></a>
+                          <a class="gallery-thumbs-item vertical modal-trigger hoverable" style="background-image: url('<?=$standard['Photos'][0]['Uri640']?>')" href="#gallery-modal" data-slide="0" onclick="openModal();currentSlide(1)" class="hover-shadow"></a>
 
-                          <a class="gallery-thumbs-item horizontal modal-trigger hoverable" style="background-image: url('<?=$standard['Photos'][1]['Uri640']?>')" href="#gallery-modal" data-slide="1"></a>
+                          <a class="gallery-thumbs-item horizontal modal-trigger hoverable" style="background-image: url('<?=$standard['Photos'][1]['Uri640']?>')" href="#gallery-modal" data-slide="1" onclick="openModal();currentSlide(2)" class="hover-shadow"></a>
 
-                          <a class="gallery-thumbs-item square modal-trigger hoverable" style="background-image: url('<?=$standard['Photos'][2]['Uri640']?>')" href="#gallery-modal" data-slide="2"></a>
+                          <a class="gallery-thumbs-item square modal-trigger hoverable" style="background-image: url('<?=$standard['Photos'][2]['Uri640']?>')" href="#gallery-modal" data-slide="2" onclick="openModal();currentSlide(3)" class="hover-shadow"></a>
 
-                          <a class="gallery-thumbs-item square modal-trigger hoverable" style="background-image: url('<?=$standard['Photos'][3]['Uri640']?>')" href="#gallery-modal" data-slide="3">
+                          <a class="gallery-thumbs-item square modal-trigger hoverable" style="background-image: url('<?=$standard['Photos'][3]['Uri640']?>')" href="#gallery-modal" data-slide="3" onclick="openModal();currentSlide(4)" class="hover-shadow">
                             <div class="gallery-thumbs-more valign-wrapper">
                               <p class="center-align">+<?=sizeof($standard['Photos'])-4?></p>
                             </div>
@@ -279,7 +279,7 @@
                         <!--a class="waves-effect waves-light btn modal-trigger" href="#gallery-modal">Modal</a-->
 
                         <!-- Modal Structure -->
-                        <div id="gallery-modal" class="modal">
+                        <!--div id="gallery-modal" class="modal">
                           <div class="modal-content">
                           <div class="carousel gallery-carousel">
                             <?php
@@ -290,6 +290,31 @@
                             } 
                             ?>
                           </div>
+                          </div>
+                        </div-->
+                        <div id="myModal" class="custom-modal">
+                          <span class="close cursor" onclick="closeModal()">&times;</span>
+                          <div class="custom-modal-content">
+                            <?php
+                              $count = 1;
+                              foreach ($standard['Photos'] as $photo) {  
+                            ?>
+                              <div class="mySlides">
+                                <div class="numbertext"><?= $count ?> / <?= sizeof($standard['Photos'])?></div>
+                                <img src="<?=$photo['Uri1280']?>" style="width:100%">
+                              </div>
+                            <?php
+                              $count++;
+                            } 
+                            ?>
+                            <!-- Next/previous controls -->
+                            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+                            <!-- Caption text -->
+                            <div class="caption-container">
+                              <p id="caption"></p>
+                            </div>
                           </div>
                         </div>
                       <div class="clearfix"></div>
@@ -437,11 +462,6 @@
         }
 
         $( document ).ready(function(){
-            //$('.slider').slider();
-            $('.carousel.carousel-slider').carousel({
-                fullWidth: true,
-                indicators: true
-            });
             $('.scrollspy').scrollSpy();
              $('.pushpin').each(function() {
               var $this = $(this);
@@ -455,16 +475,17 @@
               if ($(".property-menu-wrapper").hasClass("pinned"))
                 $(".property-menu-wrapper").css("top",$(".nav-center").height());
             });
+            /*
             $('.modal').modal({
               opacity: .75,
               ready: function(modal, trigger) {
                 $('.carousel').carousel({
-                  numVisible: 5,
-                  indicators: true
+                  indicators: true,
+                  fullWidth: true
                 });
                 $('.carousel').carousel('set', trigger.data('slide'));
               }
-            });
+            });*/
             /*$('#fullscreen-btn').click(function(){
                 var elem = document.querySelector('.slider');
                 var instance = M.Slider.getInstance(elem);
@@ -476,4 +497,52 @@
         });
         
     </script>
+    <script>
+      // Open the Modal
+      function openModal() {
+        document.getElementById('myModal').style.display = "block";
+      }
+
+      // Close the Modal
+      function closeModal() {
+        document.getElementById('myModal').style.display = "none";
+      }
+
+      var slideIndex = 1;
+      showSlides(slideIndex);
+
+      // Next/previous controls
+      function plusSlides(n) {
+        showSlides(slideIndex += n);
+      }
+
+      function currentSlide(n) {
+        showSlides(slideIndex = n);
+      }
+
+      // Thumbnail image controls
+      function currentSlide(n) {
+        showSlides(slideIndex = n);
+      }
+
+      function showSlides(n) {
+        var i;
+        var slides = document.getElementsByClassName("mySlides");
+        //var dots = document.getElementsByClassName("demo");
+        var captionText = document.getElementById("caption");
+        if (n > slides.length) {slideIndex = 1}
+        if (n < 1) {slideIndex = slides.length}
+        for (i = 0; i < slides.length; i++) {
+          slides[i].style.display = "none";
+        }
+        /*
+        for (i = 0; i < dots.length; i++) {
+          dots[i].className = dots[i].className.replace(" active", "");
+        }
+        */
+        slides[slideIndex-1].style.display = "block";
+        //dots[slideIndex-1].className += " active";
+        //captionText.innerHTML = dots[slideIndex-1].alt;
+      }
+      </script>
 {/layout:set}
