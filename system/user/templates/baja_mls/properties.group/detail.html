@@ -160,6 +160,11 @@
 
 <?php } else { ?> 
 
+  {layout:set name="og_title" value="<?= $id ?> / <?= $street ?>"}
+  {layout:set name="og_url" value="{path='properties/detail'}/<?= $listing['StandardFields']['ListingId'] ?>"}
+  {layout:set name="og_description" value="<?= $description ?>"}
+  {layout:set name="og_image" value="<?=$main_photo?>"}
+
     <div class="hero">
 
     </div>
@@ -247,21 +252,32 @@
                   <div class="card">
                     <div id="description" class="section scrollspy card-content">
                         
-                        <div class="fixed-action-btn horizontal click-to-toggle right-align share-navbar">
+                        <!--div class="fixed-action-btn horizontal click-to-toggle right-align share-navbar">
                           <a class="btn-floating btn-large red" style="float: right;">
                             <i class="material-icons">share</i>
                           </a>
                           <ul>
-                            <!--li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+                            <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
                             <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
-                            <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li-->
-                            <!--TEMP using external pdf -->
+                            <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+                            <TEMP using external pdf>
                             <li><a class="btn-floating blue" href="http://www.diamanteassociates.com/idxsearch/pdf.php?id=<?php echo $standard['ListingKey'] . '&mls_number=' . $standard['ListingId'] . '&lang=' . $language . '&rate=' . $exchange_rate; ?>" target="_blank"><i class="material-icons">print</i></a></li>
                           </ul>
-                        </div>
+                        </div-->
                         <h2><?= $id ?> / <?= $street ?></h2>
-                        <h5><?= $price ?></h5>
+                        <!-- Go to www.addthis.com/dashboard to customize your tools --> 
+                        <div class="addthis_inline_share_toolbox" style="clear:none !important;">
+                          <a href="http://www.diamanteassociates.com/idxsearch/pdf.php?id=<?php echo $standard['ListingKey'] . '&mls_number=' . $standard['ListingId'] . '&lang=' . $language . '&rate=' . $exchange_rate; ?>" target="_blank" role="button" tabindex="1" class="at-icon-wrapper at-share-btn at-svc-print" style="background-color: rgb(115, 138, 141); border-radius: 0px; padding: 5px 5px 0 5px; float:right;"><span class="at4-visually-hidden">Share to Print</span><span class="at-icon-wrapper" style="line-height: 32px; height: 32px; width: 32px;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-print-7" style="fill: rgb(255, 255, 255); width: 32px; height: 32px;" class="at-icon at-icon-print"><title id="at-svg-print-7">Print</title><g><path d="M24.67 10.62h-2.86V7.49H10.82v3.12H7.95c-.5 0-.9.4-.9.9v7.66h3.77v1.31L15 24.66h6.81v-5.44h3.77v-7.7c-.01-.5-.41-.9-.91-.9zM11.88 8.56h8.86v2.06h-8.86V8.56zm10.98 9.18h-1.05v-2.1h-1.06v7.96H16.4c-1.58 0-.82-3.74-.82-3.74s-3.65.89-3.69-.78v-3.43h-1.06v2.06H9.77v-3.58h13.09v3.61zm.75-4.91c-.4 0-.72-.32-.72-.72s.32-.72.72-.72c.4 0 .72.32.72.72s-.32.72-.72.72zm-4.12 2.96h-6.1v1.06h6.1v-1.06zm-6.11 3.15h6.1v-1.06h-6.1v1.06z"></path></g></svg></span></a>
+                        </div>
+                        <!--div class="addthis_share" style="float:right">
+                          <a class="addthis_share_button addthis_button_facebook" data-service="facebook"></a>
+                          <a class="addthis_share_button addthis_button_twitter" data-service="twitter"></a>
+                          <a class="addthis_share_button addthis_button_email" data-service="email"></a>
+                          <a class="" href="http://www.diamanteassociates.com/idxsearch/pdf.php?id=<?php echo $standard['ListingKey'] . '&mls_number=' . $standard['ListingId'] . '&lang=' . $language . '&rate=' . $exchange_rate; ?>" target="_blank">pp</a>
 
+                        </div-->
+                        <h5><?= $price ?></h5>
+                        <div class="clearfix spacer-25"></div>
                         <p class="flow-text"><?= $description ?> </p>
                         <div class="spacer-50"></div>
                     </div>
@@ -440,7 +456,16 @@
 
 {layout:set name="scripts"}
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnEhkVDYEAhWmyleuk7rvrVD6XcJ72q5A&callback=loadMap" async defer></script>
+    <!-- Go to www.addthis.com/dashboard to customize your tools --> 
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-584ad9192738c8bf"></script>
     <script>
+        // Alert a message when the AddThis API is ready
+        function addthisReady(evt) {
+            console.log('AddThis API is fully loaded.');
+            $("addthis_inline_share_toolbox").css("clear", "none");
+        }
+        // Listen for the ready event
+        addthis.addEventListener('addthis.ready', addthisReady);
         function loadMap(){
             var latlng = new google.maps.LatLng(<?php echo $map_lat . ',' . $map_lon; ?>);
             var opt = {

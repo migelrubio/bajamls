@@ -465,3 +465,7 @@ img.hover-shadow {
 .share-navbar {
   position: inherit !important;
 }
+
+.at-share-btn-elements {
+  float: right;
+}

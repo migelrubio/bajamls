@@ -12,7 +12,7 @@
 		<!-- open graph common -->
 		<meta property="og:site_name" content="{site_name}">
 		<meta property="og:type" content="website">
-		<meta property="og:image" content="{theme_folder_url}site/default/asset/img/og/default.jpg"> {!-- square, 50*50 min --}
+		<meta property="og:image" content="{layout:og_image}"> {!-- square, 50*50 min --}
 
 		{if layout:og_title != ''}
 			<!-- open graph per page -->
@@ -20,6 +20,7 @@
 			<meta property="og:url" content="{layout:og_url}">
 			<meta property="og:description" content="{layout:og_description}">
 		{/if}
+
 		<link href="/favicon1.ico" rel="shortcut icon">
 		<!-- Font Awesome -->
     	<!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"-->
