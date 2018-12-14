@@ -16,14 +16,15 @@
 
 <?php
     require($_SERVER['DOCUMENT_ROOT'] . "/app/config.php");
-    require_once($_SERVER['DOCUMENT_ROOT'] . "/flexmls/flexmlsAPI.php");
+    //require_once($_SERVER['DOCUMENT_ROOT'] . "/flexmls/flexmlsAPI.php");
+    require_once($_SERVER['DOCUMENT_ROOT'] . "/app/flexmls.php");
     require_once($_SERVER['DOCUMENT_ROOT'] . "/lang/lang.php");
     //$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-    $api = new flexmlsAPI("cab_westerlund_key_1", "5lCZrVg8d4uYSviaNIN4t");
+    /*$api = new flexmlsAPI("cab_westerlund_key_1", "5lCZrVg8d4uYSviaNIN4t");
     $api->SetApplicationName("Diamante-MLS-Search/1.0");
     $api->SetDeveloperMode(false);
     $auth = $api->Authenticate();
-    if ($auth === false) api_error_thrown($api);
+    if ($auth === false) api_error_thrown($api);*/
     $city = isset($cities["{segment_1}"]) ? "{segment_1}" : "all";
     $city_name = isset($cities[$city]["name"]) ? $cities[$city]["name"] : "";
     $property_type = "all";
@@ -59,7 +60,8 @@
     if (isset($cities[$city]["query"])) $cityQuery = $cities[$city]["query"];
 
     $parameters = array("_filter" => $cityQuery, "_expand" => 'PrimaryPhoto', "_limit" => 8, "_orderby" => '-ListPrice');
-    $listings = $api->GetMyListings($parameters);
+    $listings = getMyListings($parameters);
+    //$listings = $api->GetMyListings($parameters);
     //$listings = $api->GetMyListings();
     //$listings = $api->GetListings($parameters);
 ?>
